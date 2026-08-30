@@ -10,6 +10,7 @@ const filterUserResponse = (user) => ({
     name: user.name,
     email: user.email,
     country: user.country,
+    currency: user.currency,
     plan: user.plan || "free",
 });
 

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs'
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Country is required"],
     },
-    courrency: {
+    currency: {
         type: String,
         default: "INR",
         uppercase: true,
@@ -43,6 +43,22 @@ const userSchema = new mongoose.Schema({
         toObject: { virtuals: true },
     },
 )
+
+// Encrypt password
+userSchema.pre('save', async function () {
+    // If password hasn't been modified, skip hashing
+    if (!this.isModified("password")) return;
+
+    try {
+        // Hash the password
+        const salt = await bcrypt.genSalt(12);
+        this.password = await bcrypt.hash(this.password, salt);
+    } 
+    catch (error) {
+        // Throws an error if hashing faces problem
+        throw new Error(`Failed to hash password: ${error.message}`);
+    }
+});
 
 const User = mongoose.model("User", userSchema);
 export default User;
