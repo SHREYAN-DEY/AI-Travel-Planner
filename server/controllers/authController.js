@@ -1,5 +1,14 @@
 import User from '../models/User.js';
 import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+
+
+
+const signToken = (id) => {
+    return jwt.sign({userId: id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+    })
+}
 
 /**
  * Utility function to sanitize the user object before sending it to the client.
@@ -38,18 +47,15 @@ const register = async (req, res) => {
         }
 
         // 3. Create and save new user document in MongoDB
-        // Note: Password hashing can be done here using bcrypt or via a Mongoose pre-save hook
-        const newUser = await User.create({
-            name,
-            email,
-            password,
-            country,
-        });
+        const newUser = await User.create({name, email, password, country});
+
+        const token = signToken(newUser._id);
 
         // 4. Send a single success response with filtered user data
         return res.status(201).json({
             status: "success",
             message: "User registered successfully",
+            token,
             data: filterUserResponse(newUser),
         });
 
