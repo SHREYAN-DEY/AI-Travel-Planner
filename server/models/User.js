@@ -47,29 +47,22 @@ const userSchema = new mongoose.Schema({
 // Encrypt password
 userSchema.pre('save', async function () {
     // If password hasn't been modified, skip hashing
-    if (!this.isModified("password")) return;
-
-    try {
-        // Hash the password
-        const salt = await bcrypt.genSalt(12);
-        this.password = await bcrypt.hash(this.password, salt);
-    } 
-    catch (error) {
-        // Throws an error if hashing faces problem
-        throw new Error(`Failed to hash password: ${error.message}`);
+    if (!this.isModified("password")){
+        return;
+    }
+    // If password has been modified, perform hashing
+    else {
+        try {
+            // Hash the password
+            const salt = await bcrypt.genSalt(12);
+            this.password = await bcrypt.hash(this.password, salt);
+        }
+        catch (error) {
+            // Throws an error if hashing faces problem
+            throw new Error(`Failed to hash password: ${error.message}`);
+        }
     }
 });
-
-// userSchema.pre("save", async function(){
-//     if(this.isModified("password")){
-//         try {
-//             const salt = await bcrypt.genSalt(12);
-//             this.password = await bcrypt.hash(this.password, salt);
-//         } catch (error) {
-//             return console.error("Error hashing password");
-//         }
-//     }
-// })
 
 const User = mongoose.model("User", userSchema);
 export default User;
