@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 
 const signToken = (id) => {
-    return jwt.sign({userId: id}, process.env.JWT_SECRET, {
+    return jwt.sign({ userId: id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN || "7d",
     })
 }
@@ -47,7 +47,7 @@ const register = async (req, res) => {
         }
 
         // 3. Create and save new user document in MongoDB
-        const newUser = await User.create({name, email, password, country});
+        const newUser = await User.create({ name, email, password, country });
 
         const token = signToken(newUser._id);
 
@@ -59,7 +59,7 @@ const register = async (req, res) => {
             data: filterUserResponse(newUser),
         });
 
-    } 
+    }
     catch (error) {
         // 5. Catch any unhandled database or server errors
         console.error("Registration Error:", error);
@@ -67,6 +67,51 @@ const register = async (req, res) => {
     }
 };
 
+
+/**
+ * Handles user login and credential verification.
+ * - Checks express-validator errors
+ * - Fetches user including hidden password field
+ * - Compares bcrypt password hashes
+ * - Returns JWT and user profile
+ */
+const login = async (req, res) => {
+    // 1. Check for request validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { email, password } = req.body;
+
+        // 2. Fetch user by email, explicitly including password (select: false in schema)
+        const user = await User.findOne({ email }).select("+password");
+
+        // 3. Verify user existence and compare password hash
+        // Note the return statement to stop execution if invalid
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ message: "Invalid Credentials" });
+        }
+
+        // 4. Generate auth token
+        const token = signToken(user._id);
+
+        // 5. Return sanitized user data and token
+        return res.json({
+            status: "success",
+            token,
+            user: filterUserResponse(user),
+        });
+    }
+    catch (error) {
+        // Catch any unhandled database or server errors
+        console.error("Login Error:", error);
+        return res.status(500).json({ message: "Login Failed, please try again later" });
+    }
+}
+
 export default {
     register,
+    login,
 };

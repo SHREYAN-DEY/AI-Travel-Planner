@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
     },
 )
 
-// Encrypt password
+// Encrypt password for new registration and password change
 userSchema.pre('save', async function () {
     // If password hasn't been modified, skip hashing
     if (!this.isModified("password")){
@@ -63,6 +63,13 @@ userSchema.pre('save', async function () {
         }
     }
 });
+
+
+// Compare the password for login
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password)
+}
+
 
 const User = mongoose.model("User", userSchema);
 export default User;
