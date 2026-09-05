@@ -100,6 +100,7 @@ const login = async (req, res) => {
         // 5. Return sanitized user data and token
         return res.json({
             status: "success",
+            message: "Login successful",
             token,
             user: filterUserResponse(user),
         });
@@ -109,9 +110,37 @@ const login = async (req, res) => {
         console.error("Login Error:", error);
         return res.status(500).json({ message: "Login Failed, please try again later" });
     }
-}
+};
+
+
+/**
+ * Retrieves the authenticated user's profile details.
+ * - Expects an authentication middleware (e.g., verifyToken) to have decoded
+ *   the JWT and attached the user document to `req.user`.
+ * - Validates the presence of `req.user`.
+ * - Returns the sanitized user profile data.
+ */
+const getMe = async (req, res) => {
+    try {
+        // 1. Ensure the user object was populated by the authentication middleware
+        if (!req.user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // 2. Return the sanitized user profile
+        return res.status(200).json({
+            status: "success",
+            user: filterUserResponse(req.user),
+        });
+    } catch (error) {
+        // 3. Catch unexpected errors during serialization or execution
+        console.error("Fetch Profile Error:", error);
+        return res.status(500).json({ error: "Failed to fetch profile" });
+    }
+};
 
 export default {
     register,
     login,
+    getMe,
 };
