@@ -632,7 +632,7 @@ function Planner() {
               />
 
               <span className="truncate">
-                Smart Frontend Travel Planner
+                Smart AI Travel Planner
               </span>
 
             </div>
