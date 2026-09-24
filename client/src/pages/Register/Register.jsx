@@ -1,6 +1,5 @@
-// =========================================================
-// ======================= REGISTER ==========================
-// =========================================================
+
+//  REGISTER 
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,9 +20,7 @@ import {
 function Register() {
   const navigate = useNavigate();
 
-  // =========================================================
-  // ===================== FORM STATE =========================
-  // =========================================================
+  //  FORM STATE 
 
   const [formData, setFormData] = useState({
     name: "",
@@ -34,9 +31,7 @@ function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // =========================================================
-  // ===================== FORM CHANGE ========================
-  // =========================================================
+  //  FORM CHANGE 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +42,7 @@ function Register() {
     }));
   };
 
-  // =========================================================
-  // ======================== SUBMIT ==========================
-  // =========================================================
+  //  SUBMIT 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,9 +52,7 @@ function Register() {
     const password = formData.password.trim();
     const country = formData.country.trim();
 
-    // =======================================================
-    // ===================== VALIDATION =======================
-    // =======================================================
+    //  VALIDATION 
 
     if (!name || !email || !password || !country) {
       alert("Please fill in all fields.");
@@ -78,9 +69,7 @@ function Register() {
       return;
     }
 
-    // =======================================================
-    // ================= EXISTING USER ========================
-    // =======================================================
+    //  EXISTING USER 
 
     const existingUser = JSON.parse(
       localStorage.getItem("user") || "null"
@@ -98,9 +87,7 @@ function Register() {
       return;
     }
 
-    // =======================================================
-    // ================= FRONTEND USER ========================
-    // =======================================================
+    //  FRONTEND USER 
 
     const user = {
       name,
@@ -118,9 +105,7 @@ function Register() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("currentUser");
 
-    // =======================================================
-    // ================= SUCCESS MESSAGE ======================
-    // =======================================================
+    //  SUCCESS MESSAGE 
 
     alert(
       "Registration successful! Please login to continue. 🎉"
@@ -129,9 +114,7 @@ function Register() {
     navigate("/login");
   };
 
-  // =========================================================
-  // =========================== UI ===========================
-  // =========================================================
+  //  UI 
 
   return (
     <Layout>
@@ -141,7 +124,7 @@ function Register() {
 
           <div className="w-full">
 
-            {/* ===================== HEADER ================= */}
+            {/*  HEADER  */}
 
             <div className="mb-8 text-center">
 
@@ -159,7 +142,7 @@ function Register() {
 
             </div>
 
-            {/* ===================== REGISTER CARD ============ */}
+            {/*  REGISTER CARD  */}
 
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
 
@@ -168,7 +151,7 @@ function Register() {
                 className="space-y-5"
               >
 
-                {/* ================= NAME ==================== */}
+                {/*  NAME  */}
 
                 <div>
 
@@ -201,7 +184,7 @@ function Register() {
 
                 </div>
 
-                {/* ================= EMAIL =================== */}
+                {/*  EMAIL  */}
 
                 <div>
 
@@ -234,7 +217,7 @@ function Register() {
 
                 </div>
 
-                {/* ================= PASSWORD ================ */}
+                {/*  PASSWORD  */}
 
                 <div>
 
@@ -296,7 +279,7 @@ function Register() {
 
                 </div>
 
-                {/* ================= COUNTRY ================= */}
+                {/*  COUNTRY  */}
 
                 <div>
 
@@ -329,7 +312,7 @@ function Register() {
 
                 </div>
 
-                {/* ================= SUBMIT ================== */}
+                {/*  SUBMIT  */}
 
                 <button
                   type="submit"
@@ -345,7 +328,7 @@ function Register() {
 
               </form>
 
-              {/* ===================== LOGIN ================= */}
+              {/*  LOGIN  */}
 
               <div className="mt-6 text-center">
 

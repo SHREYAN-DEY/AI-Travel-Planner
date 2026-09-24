@@ -1,6 +1,4 @@
-// =========================================================
-// ================== TRIP DETAILS ==========================
-// =========================================================
+//  TRIP DETAILS 
 
 import { CalendarDays, Users } from "lucide-react";
 
@@ -12,7 +10,7 @@ function TripDetails({
   return (
     <div className="grid gap-6 md:grid-cols-2">
 
-      {/* ===================== TRIP DURATION ================= */}
+      {/*  TRIP DURATION  */}
 
       <div>
         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">
@@ -33,7 +31,7 @@ function TripDetails({
         </p>
       </div>
 
-      {/* ================= NUMBER OF TRAVELERS =============== */}
+      {/*  NUMBER OF TRAVELERS  */}
 
       <div>
         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">

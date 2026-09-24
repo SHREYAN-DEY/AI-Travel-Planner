@@ -43,7 +43,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------- Form Elements ---------- */
+/*  Form Elements  */
 
 button,
 input,
@@ -63,14 +63,14 @@ button {
   cursor: pointer;
 }
 
-/* ---------- Links ---------- */
+/*  Links  */
 
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* ---------- Images ---------- */
+/*  Images  */
 
 img,
 svg,
@@ -79,7 +79,7 @@ canvas {
   max-width: 100%;
 }
 
-/* ---------- Text Overflow Protection ---------- */
+/*  Text Overflow Protection  */
 
 h1,
 h2,
@@ -93,7 +93,7 @@ label {
   overflow-wrap: anywhere;
 }
 
-/* ---------- Leaflet ---------- */
+/*  Leaflet  */
 
 .leaflet-container {
   width: 100%;
@@ -103,7 +103,7 @@ label {
   z-index: 0;
 }
 
-/* ---------- Mobile ---------- */
+/*  Mobile  */
 
 @media (max-width: 640px) {
   .leaflet-container {
@@ -111,7 +111,7 @@ label {
   }
 }
 
-/* ---------- Small Mobile ---------- */
+/*  Small Mobile  */
 
 @media (max-width: 380px) {
   html,

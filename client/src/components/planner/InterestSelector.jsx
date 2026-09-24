@@ -1,6 +1,4 @@
-// =========================================================
-// ================= INTEREST SELECTOR ======================
-// =========================================================
+//  INTEREST SELECTOR 
 
 import {
   Utensils,
@@ -16,9 +14,7 @@ import {
 
 import { interests } from "../../data/interests";
 
-// =========================================================
-// ===================== ICON MAPPING ========================
-// =========================================================
+//  ICON MAPPING 
 
 const interestIcons = {
   "🍜 Food": Utensils,
@@ -31,15 +27,13 @@ const interestIcons = {
   "🧗 Adventure": MountainSnow,
 };
 
-// =========================================================
-// ================= INTEREST SELECTOR =======================
-// =========================================================
+//  INTEREST SELECTOR 
 
 function InterestSelector({ selectedInterests, onChange }) {
   return (
     <div>
 
-      {/* ===================== LABEL ======================== */}
+      {/*  LABEL  */}
 
       <div className="mb-4">
 
@@ -53,7 +47,7 @@ function InterestSelector({ selectedInterests, onChange }) {
 
       </div>
 
-      {/* ===================== INTEREST GRID ================ */}
+      {/*  INTEREST GRID  */}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
 
@@ -78,7 +72,7 @@ function InterestSelector({ selectedInterests, onChange }) {
                 className="peer sr-only"
               />
 
-              {/* ================= INTEREST CARD ============ */}
+              {/*  INTEREST CARD  */}
 
               <div
                 className={`
@@ -103,7 +97,7 @@ function InterestSelector({ selectedInterests, onChange }) {
                 `}
               >
 
-                {/* ================= ICON =================== */}
+                {/*  ICON  */}
 
                 <div
                   className={`
@@ -129,7 +123,7 @@ function InterestSelector({ selectedInterests, onChange }) {
                   />
                 </div>
 
-                {/* ================= TEXT =================== */}
+                {/*  TEXT  */}
 
                 <span
                   className={`
@@ -148,7 +142,7 @@ function InterestSelector({ selectedInterests, onChange }) {
                   )}
                 </span>
 
-                {/* ================= SELECTED STATUS ======== */}
+                {/*  SELECTED STATUS  */}
 
                 {isSelected && (
                   <span className="mt-1 text-[10px] font-medium text-indigo-500">
@@ -164,7 +158,7 @@ function InterestSelector({ selectedInterests, onChange }) {
 
       </div>
 
-      {/* ================= SELECTED COUNT =================== */}
+      {/*  SELECTED COUNT  */}
 
       {selectedInterests.length > 0 && (
         <div className="mt-4 flex items-center justify-center">

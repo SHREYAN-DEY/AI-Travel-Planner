@@ -1,6 +1,5 @@
-// =========================================================
-// ======================== LOGIN ============================
-// =========================================================
+
+//  LOGIN 
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,9 +18,7 @@ import {
 function Login() {
   const navigate = useNavigate();
 
-  // =========================================================
-  // ===================== FORM STATE =========================
-  // =========================================================
+  //  FORM STATE 
 
   const [formData, setFormData] = useState({
     email: "",
@@ -31,9 +28,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // =========================================================
-  // ===================== FORM CHANGE ========================
-  // =========================================================
+  //  FORM CHANGE 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,9 +39,7 @@ function Login() {
     }));
   };
 
-  // =========================================================
-  // ======================== SUBMIT ==========================
-  // =========================================================
+  //  SUBMIT 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,9 +47,7 @@ function Login() {
     const email = formData.email.trim().toLowerCase();
     const password = formData.password.trim();
 
-    // =========================================================
-    // ===================== VALIDATION =========================
-    // =========================================================
+    //  VALIDATION 
 
     if (!email || !password) {
       alert("Please fill in all fields.");
@@ -81,9 +72,7 @@ function Login() {
         setTimeout(resolve, 700)
       );
 
-      // =======================================================
-      // ================= STORED USER =========================
-      // =======================================================
+      //  STORED USER 
 
       const storedUser = JSON.parse(
         localStorage.getItem("user") || "null"
@@ -111,9 +100,7 @@ function Login() {
         return;
       }
 
-      // =======================================================
-      // ================= LOGIN STATE =========================
-      // =======================================================
+      //  LOGIN STATE 
 
       localStorage.setItem(
         "isLoggedIn",
@@ -145,9 +132,7 @@ function Login() {
     }
   };
 
-  // =========================================================
-  // =========================== UI ===========================
-  // =========================================================
+  //  UI 
 
   return (
     <Layout>
@@ -157,7 +142,7 @@ function Login() {
 
           <div className="w-full">
 
-            {/* ===================== HEADER ================= */}
+            {/*  HEADER  */}
 
             <div className="mb-8 text-center">
 
@@ -175,7 +160,7 @@ function Login() {
 
             </div>
 
-            {/* ===================== LOGIN CARD ============== */}
+            {/*  LOGIN CARD  */}
 
             <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
 
@@ -184,7 +169,7 @@ function Login() {
                 className="space-y-5"
               >
 
-                {/* ================= EMAIL ================== */}
+                {/*  EMAIL  */}
 
                 <div>
 
@@ -217,7 +202,7 @@ function Login() {
 
                 </div>
 
-                {/* ================= PASSWORD =============== */}
+                {/*  PASSWORD  */}
 
                 <div>
 
@@ -275,7 +260,7 @@ function Login() {
 
                 </div>
 
-                {/* ================= LOGIN BUTTON ============ */}
+                {/*  LOGIN BUTTON  */}
 
                 <button
                   type="submit"
@@ -305,7 +290,7 @@ function Login() {
 
               </form>
 
-              {/* ===================== DIVIDER =============== */}
+              {/*  DIVIDER  */}
 
               <div className="my-6 flex items-center gap-3">
 
@@ -319,7 +304,7 @@ function Login() {
 
               </div>
 
-              {/* ===================== REGISTER ============== */}
+              {/*  REGISTER  */}
 
               <div className="text-center">
 
@@ -339,7 +324,7 @@ function Login() {
 
             </div>
 
-            {/* ================= FRONTEND INDICATOR ========== */}
+            {/*  FRONTEND INDICATOR  */}
 
             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
               <Plane size={14} />

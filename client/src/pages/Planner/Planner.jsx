@@ -33,9 +33,7 @@ function Planner() {
     budgetMax: "",
   });
 
-  // =========================================================
-  // ===================== DATE DURATION ======================
-  // =========================================================
+  //  DATE DURATION 
 
   const calculateDuration = (startDate, endDate) => {
     if (!startDate || !endDate) return "";
@@ -61,9 +59,7 @@ function Planner() {
     return difference;
   };
 
-  // =========================================================
-  // ===================== FORM CHANGE ========================
-  // =========================================================
+  //  FORM CHANGE 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,9 +93,7 @@ function Planner() {
     });
   };
 
-  // =========================================================
-  // ===================== INTEREST CHANGE ====================
-  // =========================================================
+  //  INTEREST CHANGE 
 
   const handleInterestChange = (interest) => {
     setFormData((prev) => ({
@@ -113,9 +107,7 @@ function Planner() {
     }));
   };
 
-  // =========================================================
-  // ================= GENERATE LOCAL ITINERARY ===============
-  // =========================================================
+  //  GENERATE LOCAL ITINERARY  
 
   const generateLocalItinerary = () => {
     const destination = formData.destination.trim();
@@ -162,9 +154,7 @@ function Planner() {
       (_, index) => {
         const dayNumber = index + 1;
 
-        // =====================================================
-        // ====================== MORNING =======================
-        // =====================================================
+        //  MORNING 
 
         let morningTitle = `Explore ${destination}`;
 
@@ -188,9 +178,7 @@ function Planner() {
           morningDescription = `Start the day with an exciting adventure activity and discover ${destination} from a different perspective.`;
         }
 
-        // =====================================================
-        // ===================== AFTERNOON ======================
-        // =====================================================
+        //  AFTERNOON 
 
         let afternoonTitle = "Local Food Experience";
 
@@ -214,9 +202,7 @@ function Planner() {
           afternoonDescription = `Explore popular markets and shopping areas in ${destination} and discover local products and souvenirs.`;
         }
 
-        // =====================================================
-        // ======================= EVENING ======================
-        // =====================================================
+        //  EVENING 
 
         let eveningTitle = "Sightseeing & Photography";
 
@@ -267,9 +253,7 @@ function Planner() {
     return itinerary;
   };
 
-  // =========================================================
-  // ================= GET SAVED TRIPS SAFELY =================
-  // =========================================================
+  //  GET SAVED TRIPS SAFELY 
 
   const getSavedTrips = () => {
     try {
@@ -290,18 +274,14 @@ function Planner() {
     }
   };
 
-  // =========================================================
-  // ========================= SUBMIT =========================
-  // =========================================================
+  //  SUBMIT 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (loading) return;
 
-    // =======================================================
-    // ================= REQUIRED FIELD VALIDATION ============
-    // =======================================================
+    //  REQUIRED FIELD VALIDATION 
 
     if (!formData.destination.trim()) {
       alert("Please enter your destination.");
@@ -338,9 +318,7 @@ function Planner() {
       return;
     }
 
-    // =======================================================
-    // ===================== DATE VALIDATION ==================
-    // =======================================================
+    //  DATE VALIDATION 
 
     const startDate = new Date(formData.startDate);
     const endDate = new Date(formData.endDate);
@@ -358,9 +336,8 @@ function Planner() {
       return;
     }
 
-    // =======================================================
-    // ================ CALCULATE FINAL DURATION ==============
-    // =======================================================
+
+    //  CALCULATE FINAL DURATION 
 
     const calculatedDuration = calculateDuration(
       formData.startDate,
@@ -372,9 +349,7 @@ function Planner() {
       return;
     }
 
-    // =======================================================
-    // ==================== BUDGET VALIDATION ==================
-    // =======================================================
+    //  BUDGET VALIDATION 
 
     const minBudget = Number(formData.budgetMin);
     const maxBudget = Number(formData.budgetMax);
@@ -400,6 +375,7 @@ function Planner() {
 
       // Make sure itinerary always uses the
       // automatically calculated duration.
+
       const finalFormData = {
         ...formData,
         duration: calculatedDuration,
@@ -435,9 +411,7 @@ function Planner() {
         createdAt: new Date().toISOString(),
       };
 
-      // =====================================================
-      // ====================== SAVE TRIP =====================
-      // =====================================================
+      //  SAVE TRIP LOCALLY 
 
       const existingTrips = getSavedTrips();
 
@@ -451,9 +425,7 @@ function Planner() {
         JSON.stringify(updatedTrips)
       );
 
-      // =====================================================
-      // ==================== OPEN ITINERARY ==================
-      // =====================================================
+      //  OPEN ITINERARY 
 
       navigate("/itinerary", {
         state: trip,
@@ -473,9 +445,7 @@ function Planner() {
     }
   };
 
-  // =========================================================
-  // ========== GENERATE ITINERARY WITH FINAL DURATION =======
-  // =========================================================
+  //  GENERATE ITINERARY WITH FINAL DURATION 
 
   const generateLocalItineraryWithDuration = (
     currentFormData
@@ -528,9 +498,7 @@ function Planner() {
       (_, index) => {
         const dayNumber = index + 1;
 
-        // ===================================================
-        // ====================== MORNING =====================
-        // ===================================================
+        //  MORNING 
 
         let morningTitle = `Explore ${destination}`;
 
@@ -554,9 +522,7 @@ function Planner() {
           morningDescription = `Start the day with an exciting adventure activity and discover ${destination} from a different perspective.`;
         }
 
-        // ===================================================
-        // ===================== AFTERNOON ====================
-        // ===================================================
+        //  AFTERNOON 
 
         let afternoonTitle = "Local Food Experience";
 
@@ -580,9 +546,7 @@ function Planner() {
           afternoonDescription = `Explore popular markets and shopping areas in ${destination} and discover local products and souvenirs.`;
         }
 
-        // ===================================================
-        // ======================= EVENING ====================
-        // ===================================================
+        //  EVENING 
 
         let eveningTitle = "Sightseeing & Photography";
 
@@ -633,9 +597,7 @@ function Planner() {
     return itinerary;
   };
 
-  // =========================================================
-  // =========================== UI ===========================
-  // =========================================================
+  //  UI 
 
   return (
     <Layout>
@@ -643,7 +605,7 @@ function Planner() {
 
         <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
 
-          {/* ======================== HEADER ======================== */}
+          {/*  HEADER  */}
 
           <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
 
@@ -677,7 +639,7 @@ function Planner() {
 
           </div>
 
-          {/* ======================= FORM CARD ====================== */}
+          {/*  FORM CARD  */}
 
           <div className="w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:rounded-3xl sm:p-8 md:p-10">
 
@@ -731,7 +693,7 @@ function Planner() {
                 onChange={handleInterestChange}
               />
 
-              {/* ================= GENERATE BUTTON ================= */}
+              {/*  GENERATE BUTTON  */}
 
               <div className="border-t border-gray-100 pt-6">
 

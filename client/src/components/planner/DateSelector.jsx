@@ -1,14 +1,10 @@
-// =========================================================
-// ===================== DATE SELECTOR ======================
-// =========================================================
+//  DATE SELECTOR 
 
 import { CalendarDays, X } from "lucide-react";
 
 function DateSelector({ startDate, endDate, onChange }) {
 
-  // =========================================================
-  // ===================== CLEAR DATE =========================
-  // =========================================================
+  //  CLEAR DATE 
 
   const clearDate = (name) => {
     onChange({
@@ -22,7 +18,7 @@ function DateSelector({ startDate, endDate, onChange }) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
 
-      {/* ===================== START DATE =================== */}
+      {/*  START DATE  */}
 
       <div>
         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">
@@ -66,7 +62,7 @@ function DateSelector({ startDate, endDate, onChange }) {
         </p>
       </div>
 
-      {/* ======================= END DATE =================== */}
+      {/*  END DATE  */}
 
       <div>
         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">

@@ -1,6 +1,4 @@
-// =========================================================
-// ================= TRAVEL STYLE SELECTOR ==================
-// =========================================================
+//  TRAVEL STYLE SELECTOR 
 
 import { Compass } from "lucide-react";
 
@@ -30,7 +28,7 @@ function TravelStyleSelector({ value, onChange }) {
 
   return (
     <div>
-      {/* ===================== LABEL ======================== */}
+      {/*  LABEL  */}
 
       <label className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
         <Compass
@@ -40,7 +38,7 @@ function TravelStyleSelector({ value, onChange }) {
         Travel Style
       </label>
 
-      {/* ===================== STYLE OPTIONS ================ */}
+      {/*  STYLE OPTIONS  */}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {travelStyles.map((style) => (

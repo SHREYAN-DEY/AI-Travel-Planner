@@ -1,13 +1,10 @@
-// =========================================================
-// =================== BUDGET SELECTOR ======================
-// =========================================================
+// BUDGET SELECTOR 
 
 import { Wallet } from "lucide-react";
 
 function BudgetSelector({ budgetMin, budgetMax, onChange }) {
-  // =========================================================
-  // ===================== BUDGET RANGE =======================
-  // =========================================================
+  
+  // BUDGET RANGE 
 
   const MIN_BUDGET = 5000;
   const MAX_BUDGET = 500000;
@@ -37,9 +34,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
     },
   ];
 
-  // =========================================================
-  // ================= SELECTED BUDGET ========================
-  // =========================================================
+  // SELECTED BUDGET 
 
   const selectedBudget = budgets.find(
     (item) =>
@@ -47,9 +42,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
       budgetMax === item.max
   );
 
-  // =========================================================
-  // ================= BUDGET CHANGE ==========================
-  // =========================================================
+  // BUDGET CHANGE 
 
   const handleBudgetChange = (item) => {
     onChange({
@@ -67,16 +60,13 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
     });
   };
 
-  // =========================================================
-  // ================= CURRENT VALUES ==========================
-  // =========================================================
+  //  CURRENT VALUES 
 
   const minValue = Number(budgetMin) || MIN_BUDGET;
   const maxValue = Number(budgetMax) || MAX_BUDGET;
 
-  // =========================================================
-  // ================= MINIMUM SLIDER ==========================
-  // =========================================================
+  // MINIMUM SLIDER 
+
 
   const handleMinSlider = (e) => {
     const value = Number(e.target.value);
@@ -89,9 +79,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
     });
   };
 
-  // =========================================================
-  // ================= MAXIMUM SLIDER ==========================
-  // =========================================================
+  // MAXIMUM SLIDER 
 
   const handleMaxSlider = (e) => {
     const value = Number(e.target.value);
@@ -104,9 +92,8 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
     });
   };
 
-  // =========================================================
-  // ================= FORMAT BUDGET ===========================
-  // =========================================================
+  
+  //  FORMAT BUDGET 
 
   const formatBudget = (value) => {
     const number = Number(value);
@@ -122,14 +109,12 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
     return `₹${number / 1000}k`;
   };
 
-  // =========================================================
-  // ========================= UI ==============================
-  // =========================================================
+  //  UI 
 
   return (
     <div>
 
-      {/* ===================== LABEL ======================== */}
+      {/*  LABEL  */}
 
       <label className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-800">
         <Wallet
@@ -140,7 +125,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
         Budget
       </label>
 
-      {/* ===================== PRESET OPTIONS =============== */}
+      {/*  PRESET OPTIONS  */}
 
       <div className="grid gap-3 sm:grid-cols-3">
 
@@ -189,11 +174,11 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
 
       </div>
 
-      {/* ================= MANUAL BUDGET ==================== */}
+      {/*  MANUAL BUDGET  */}
 
       <div className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
 
-        {/* ================= CUSTOM BUDGET HEADER =========== */}
+        {/*  CUSTOM BUDGET HEADER  */}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
@@ -213,7 +198,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
 
         </div>
 
-        {/* ================= MINIMUM BUDGET ================== */}
+        {/*  MINIMUM BUDGET  */}
 
         <div className="mt-6">
 
@@ -239,7 +224,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
 
         </div>
 
-        {/* ================= MAXIMUM BUDGET ================== */}
+        {/*  MAXIMUM BUDGET  */}
 
         <div className="mt-5">
 
@@ -265,7 +250,7 @@ function BudgetSelector({ budgetMin, budgetMax, onChange }) {
 
         </div>
 
-        {/* ================= RANGE LABELS =================== */}
+        {/*  RANGE LABELS  */}
 
         <div className="mt-2 flex justify-between text-xs text-gray-400">
           <span>
