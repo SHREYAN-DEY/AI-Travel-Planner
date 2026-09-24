@@ -639,7 +639,7 @@ function Planner() {
 
           </div>
 
-          {/*  FORM CARD  */}
+         {/*  FORM CARD  */}
 
           <div className="w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:rounded-3xl sm:p-8 md:p-10">
 
