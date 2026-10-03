@@ -1,24 +1,18 @@
-
-// LAYOUT
-
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Navbar from "./Navbar"
+import Footer from "./Footer"
 
 function Layout({ children }) {
   return (
-    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-white">
-      {/*  NAVBAR  */}
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#050505] text-white">
       <Navbar />
 
-      {/*  MAIN CONTENT  */}
-      <main className="w-full max-w-full min-w-0 overflow-x-hidden">
+      <main className="flex-1 pt-28 sm:pt-32">
         {children}
       </main>
 
-      {/* FOOTER */}
       <Footer />
     </div>
-  );
+  )
 }
 
-export default Layout;
+export default Layout

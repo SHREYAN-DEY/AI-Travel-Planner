@@ -1,181 +1,53 @@
-//  INTEREST SELECTOR 
+import { Check } from "lucide-react"
 
-import {
-  Utensils,
-  Landmark,
-  Waves,
-  Mountain,
-  ShoppingBag,
-  Theater,
-  Camera,
-  MountainSnow,
-  Heart,
-} from "lucide-react";
-
-import { interests } from "../../data/interests";
-
-//  ICON MAPPING 
-
-const interestIcons = {
-  "🍜 Food": Utensils,
-  "🏛️ Culture": Landmark,
-  "🏖️ Beaches": Waves,
-  "🏔️ Nature": Mountain,
-  "🛍️ Shopping": ShoppingBag,
-  "🎭 Entertainment": Theater,
-  "📸 Photography": Camera,
-  "🧗 Adventure": MountainSnow,
-};
-
-//  INTEREST SELECTOR 
-
-function InterestSelector({ selectedInterests, onChange }) {
+function InterestSelector({
+  interests,
+  selectedInterests,
+  onToggle,
+}) {
   return (
-    <div>
+    <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+            05 / Interests
+          </p>
 
-      {/*  LABEL  */}
+          <h2 className="mt-1 text-lg font-black">
+            What do you enjoy?
+          </h2>
+        </div>
 
-      <div className="mb-4">
-
-        <label className="block text-sm font-semibold text-gray-800">
-          What are you interested in?
-        </label>
-
-        <p className="mt-1 text-xs leading-5 text-gray-500">
-          Choose the experiences you would like to include in your trip.
-        </p>
-
+        <div className="rounded-lg bg-blue-500/10 px-2.5 py-1 text-[10px] font-bold text-blue-400">
+          {selectedInterests.length} Selected
+        </div>
       </div>
 
-      {/*  INTEREST GRID  */}
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-
+      <div className="grid grid-cols-2 gap-2">
         {interests.map((interest) => {
-          const Icon =
-            interestIcons[interest] || Heart;
-
-          const isSelected =
-            selectedInterests.includes(interest);
+          const selected =
+            selectedInterests.includes(interest)
 
           return (
-            <label
+            <button
               key={interest}
-              className="cursor-pointer"
+              type="button"
+              onClick={() => onToggle(interest)}
+              className={`flex items-center justify-between rounded-xl border px-3 py-3 text-left text-[11px] font-bold transition-all ${
+                selected
+                  ? "border-blue-500/40 bg-blue-600/10 text-blue-400"
+                  : "border-white/10 bg-[#111113] text-slate-500 hover:border-white/20 hover:text-white"
+              }`}
             >
+              <span>{interest}</span>
 
-              <input
-                type="checkbox"
-                value={interest}
-                checked={isSelected}
-                onChange={() => onChange(interest)}
-                className="peer sr-only"
-              />
-
-              {/*  INTEREST CARD  */}
-
-              <div
-                className={`
-                  group
-                  flex
-                  min-h-[120px]
-                  flex-col
-                  items-center
-                  justify-center
-                  rounded-2xl
-                  border
-                  px-3
-                  py-4
-                  text-center
-                  transition-all
-                  duration-200
-                  ${
-                    isSelected
-                      ? "border-indigo-600 bg-indigo-50 shadow-sm"
-                      : "border-gray-200 bg-white hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-indigo-50/40 hover:shadow-sm"
-                  }
-                `}
-              >
-
-                {/*  ICON  */}
-
-                <div
-                  className={`
-                    mb-3
-                    flex
-                    h-11
-                    w-11
-                    items-center
-                    justify-center
-                    rounded-xl
-                    transition-all
-                    duration-200
-                    ${
-                      isSelected
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                        : "bg-gray-100 text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600"
-                    }
-                  `}
-                >
-                  <Icon
-                    size={21}
-                    strokeWidth={2}
-                  />
-                </div>
-
-                {/*  TEXT  */}
-
-                <span
-                  className={`
-                    text-sm
-                    font-semibold
-                    ${
-                      isSelected
-                        ? "text-indigo-700"
-                        : "text-gray-700"
-                    }
-                  `}
-                >
-                  {interest.replace(
-                    /^[^\p{L}\p{N}\s]+/u,
-                    ""
-                  )}
-                </span>
-
-                {/*  SELECTED STATUS  */}
-
-                {isSelected && (
-                  <span className="mt-1 text-[10px] font-medium text-indigo-500">
-                    Selected
-                  </span>
-                )}
-
-              </div>
-
-            </label>
-          );
+              {selected && <Check size={14} />}
+            </button>
+          )
         })}
-
       </div>
-
-      {/*  SELECTED COUNT  */}
-
-      {selectedInterests.length > 0 && (
-        <div className="mt-4 flex items-center justify-center">
-
-          <div className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600">
-            {selectedInterests.length}{" "}
-            {selectedInterests.length === 1
-              ? "interest"
-              : "interests"}{" "}
-            selected
-          </div>
-
-        </div>
-      )}
-
     </div>
-  );
+  )
 }
 
-export default InterestSelector;
+export default InterestSelector

@@ -1,212 +1,219 @@
-import Layout from "../../components/layout/Layout";
-import { Link } from "react-router-dom";
 import {
-  Navigation,
-  Route,
-  Settings2,
-  Compass,
-  Map,
-  CalendarDays,
-  Wallet,
-  Heart,
   ArrowRight,
-  Globe2,
-  CheckCircle2,
-} from "lucide-react";
+  CalendarDays,
+  Compass,
+  MapPin,
+  Wallet,
+  Users,
+  CloudSun,
+} from "lucide-react"
+import { Link } from "react-router-dom"
 
-//  HOME PAGE 
 function Home() {
-  const features = [
-    {
-      icon: Route,
-      title: "AI Trip Planning",
-      description:
-        "Generate personalized travel plans using your destination, budget, interests and travel preferences.",
-    },
-    {
-      icon: Map,
-      title: "Interactive Travel Map",
-      description:
-        "View your selected destination on an interactive map and explore your trip location visually.",
-    },
-    {
-      icon: CalendarDays,
-      title: "Day-by-Day Itinerary",
-      description:
-        "Organize activities into a clear daily schedule so your travel plan is easy to follow.",
-    },
-    {
-      icon: Wallet,
-      title: "Budget Planning",
-      description:
-        "Select a suitable budget range and keep your trip planning aligned with your spending preferences.",
-    },
-    {
-      icon: Heart,
-      title: "Interest-Based Planning",
-      description:
-        "Choose interests such as food, nature, beaches, culture, shopping and adventure.",
-    },
-    {
-      icon: CheckCircle2,
-      title: "Save Your Trips",
-      description:
-        "Keep your generated travel plans available from your dashboard for easy access later.",
-    },
-  ];
-
   return (
-    <Layout>
-      <main className="w-full min-w-0 overflow-x-hidden bg-white">
+    <section className="min-h-screen bg-[#050505] px-4 pb-16 pt-6 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
 
-        {/* HERO SECTION */}
+        {/* ==================================================
+            HERO
+        ================================================== */}
 
-        <section className="w-full overflow-hidden border-b border-gray-100">
-          <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid items-center gap-10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-20">
 
-            <div className="mx-auto flex w-full min-w-0 max-w-4xl flex-col items-center text-center">
+          {/* LEFT */}
 
-              {/*BADGE */}
+          <div>
 
-              <div className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 sm:px-4 sm:text-sm">
-                <Navigation size={15} className="shrink-0" />
+            {/* Travel Intelligence Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-blue-400">
+              <Compass size={15} />
+              AI Travel Intelligence
+            </div>
 
-                <span className="min-w-0">
-                  AI-Powered Travel Planning
-                </span>
-              </div>
+            {/* Main Heading */}
+            <h1 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+              PLAN YOUR
 
-              {/* HEADING */}
+              <span className="block text-blue-500">
+                PERFECT JOURNEY.
+              </span>
+            </h1>
 
-              <h1 className="mt-6 w-full max-w-3xl break-words text-3xl font-extrabold leading-[1.08] tracking-tight text-gray-950 sm:text-5xl md:text-6xl lg:text-7xl">
+            {/* Description */}
+            <p className="mt-7 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
+              Create personalized day-by-day travel plans based on
+              your destination, dates, budget, travelers and interests.
+            </p>
 
-                <span className="block break-words">
-                  Plan your journey.
-                </span>
+            {/* CTA */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
 
-                <span className="block break-words text-indigo-600">
-                  Travel your way.
-                </span>
+              <Link
+                to="/planner"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-blue-500/30"
+              >
+                Start Planning
 
-              </h1>
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </Link>
 
-              {/* DESCRIPTION */}
-
-              <p className="mx-auto mt-5 w-full max-w-2xl break-words px-1 text-sm leading-6 text-gray-600 sm:mt-6 sm:px-0 sm:text-lg sm:leading-8">
-                Create personalized travel itineraries based on your
-                destination, budget, interests, travel style and available
-                time — all in one place.
-              </p>
-
-              {/*HERO BUTTONS*/}
-
-              <div className="mt-7 flex w-full max-w-md flex-col items-stretch justify-center gap-3 sm:mt-8 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:gap-4">
-
-                <Link
-                  to="/planner"
-                  className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold !text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl sm:w-auto sm:px-7"
-                >
-                  <span>Start Planning</span>
-
-                  <ArrowRight
-                    size={18}
-                    className="shrink-0 !text-white transition-transform duration-200 group-hover:translate-x-1"
-                  />
-                </Link>
-
-                <a
-                  href="#features"
-                  className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold !text-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-400 hover:bg-gray-50 sm:w-auto sm:px-7"
-                >
-                  <span>Explore Features</span>
-                </a>
-
-              </div>
-
-              {/*TRUST POINTS*/}
-
-              <div className="mt-8 flex w-full flex-wrap items-center justify-center gap-x-5 gap-y-3 px-1 text-xs text-gray-500 sm:mt-9 sm:gap-x-6 sm:text-sm">
-
-                <span className="inline-flex max-w-full items-center gap-1.5">
-                  <CheckCircle2
-                    size={15}
-                    className="shrink-0 !text-indigo-600"
-                  />
-
-                  <span>Personalized Plans</span>
-                </span>
-
-                <span className="inline-flex max-w-full items-center gap-1.5">
-                  <CheckCircle2
-                    size={15}
-                    className="shrink-0 !text-indigo-600"
-                  />
-
-                  <span>Interactive Maps</span>
-                </span>
-
-                <span className="inline-flex max-w-full items-center gap-1.5">
-                  <CheckCircle2
-                    size={15}
-                    className="shrink-0 !text-indigo-600"
-                  />
-
-                  <span>Saved Trips</span>
-                </span>
-
-              </div>
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-6 py-3.5 text-sm font-semibold text-slate-300 transition-all duration-200 hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
+              >
+                Explore Trips
+              </Link>
 
             </div>
 
-            {/* HERO PREVIEW */}
+          </div>
 
-            <div className="mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 p-2 shadow-sm sm:mt-16 sm:rounded-3xl sm:p-3">
+          {/* ==================================================
+              RIGHT — TRIP PREVIEW
+          ================================================== */}
 
-              <div className="w-full min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 sm:rounded-2xl sm:p-8">
+          <div className="relative">
 
-                <div className="flex w-full min-w-0 flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+            {/* Blue Glow */}
+            <div className="absolute -inset-10 -z-10 rounded-full bg-blue-600/10 blur-3xl" />
 
-                  {/*PREVIEW TEXT*/}
+            <div className="rounded-[28px] border border-white/10 bg-[#0b0b0d] p-5 shadow-2xl shadow-blue-950/20 sm:p-6">
 
-                  <div className="min-w-0 flex-1">
+              {/* Preview Header */}
 
-                    <div className="flex min-w-0 items-center gap-2 text-xs font-semibold tracking-wide text-indigo-600 sm:text-sm">
+              <div className="flex items-center justify-between">
 
-                      <Globe2
-                        size={17}
-                        className="shrink-0"
-                      />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500">
+                    Travel Mission
+                  </p>
 
-                      <span className="truncate">
-                        YOUR NEXT ADVENTURE
-                      </span>
+                  <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
+                    New Journey
+                  </h2>
+                </div>
 
-                    </div>
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600/10 text-blue-400">
+                  <MapPin size={20} />
+                </div>
 
-                    <h2 className="mt-2 break-words text-lg font-bold leading-tight text-gray-900 sm:text-2xl md:text-3xl">
-                      One smart planner for your entire trip.
-                    </h2>
+              </div>
 
-                    <p className="mt-3 max-w-xl break-words text-sm leading-6 text-gray-600 sm:text-base">
-                      Choose where you want to go, tell us what you love,
-                      and let the planner organize your journey.
+              {/* Destination */}
+
+              <div className="mt-6 rounded-2xl border border-white/10 bg-[#111113] p-5">
+
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+                  Destination
+                </p>
+
+                <div className="mt-2 flex items-center justify-between">
+
+                  <p className="text-2xl font-black text-white">
+                    Your Destination
+                  </p>
+
+                  <MapPin
+                    size={20}
+                    className="text-blue-500"
+                  />
+
+                </div>
+
+                <p className="mt-2 text-xs text-slate-500">
+                  Personalized route synthesis
+                </p>
+
+              </div>
+
+              {/* Stats */}
+
+              <div className="mt-3 grid grid-cols-3 gap-2">
+
+                {/* Duration */}
+
+                <div className="rounded-2xl border border-white/10 bg-[#111113] p-4">
+
+                  <CalendarDays
+                    size={17}
+                    className="text-blue-400"
+                  />
+
+                  <p className="mt-3 text-[10px] uppercase tracking-wider text-slate-500">
+                    Duration
+                  </p>
+
+                  <p className="mt-1 text-sm font-bold text-white">
+                    Auto
+                  </p>
+
+                </div>
+
+                {/* Group */}
+
+                <div className="rounded-2xl border border-white/10 bg-[#111113] p-4">
+
+                  <Users
+                    size={17}
+                    className="text-blue-400"
+                  />
+
+                  <p className="mt-3 text-[10px] uppercase tracking-wider text-slate-500">
+                    Group
+                  </p>
+
+                  <p className="mt-1 text-sm font-bold text-white">
+                    Flexible
+                  </p>
+
+                </div>
+
+                {/* Budget */}
+
+                <div className="rounded-2xl border border-white/10 bg-[#111113] p-4">
+
+                  <Wallet
+                    size={17}
+                    className="text-blue-400"
+                  />
+
+                  <p className="mt-3 text-[10px] uppercase tracking-wider text-slate-500">
+                    Budget
+                  </p>
+
+                  <p className="mt-1 text-sm font-bold text-white">
+                    Custom
+                  </p>
+
+                </div>
+
+              </div>
+
+              {/* AI Engine */}
+
+              <div className="mt-3 rounded-2xl bg-blue-600 p-5 shadow-lg shadow-blue-600/10">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-100">
+                      AI Engine
+                    </p>
+
+                    <p className="mt-1 text-lg font-black text-white">
+                      Ready to Plan
                     </p>
 
                   </div>
 
-                  {/*TRY PLANNER BUTTON*/}
-
-                  <Link
-                    to="/planner"
-                    className="group inline-flex min-h-12 w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-gray-950 px-5 py-3 text-sm font-semibold !text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-600 md:w-auto"
-                  >
-                    <span>Try Planner</span>
-
-                    <ArrowRight
-                      size={17}
-                      className="shrink-0 !text-white transition-transform duration-200 group-hover:translate-x-1"
-                    />
-                  </Link>
+                  <Compass
+                    size={25}
+                    className="text-white/80"
+                  />
 
                 </div>
 
@@ -215,125 +222,123 @@ function Home() {
             </div>
 
           </div>
-        </section>
 
-        {/*FEATURES SECTION*/}
+        </div>
 
-        <section
-          id="features"
-          className="w-full overflow-hidden bg-gray-50 py-14 sm:py-20 lg:py-24"
-        >
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* ==================================================
+            FEATURE GRID
+        ================================================== */}
 
-            {/* FEATURES HEADER */}
+        <div className="grid gap-3 md:grid-cols-3">
 
-            <div className="mx-auto max-w-2xl text-center">
+          {/* Card 1 — Personalized Planning */}
 
-              <div className="inline-flex max-w-full items-center justify-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-indigo-700 shadow-sm sm:px-4 sm:text-sm">
-                <Settings2 size={16} />
-                <span>Smart Features</span>
+          <div className="group rounded-2xl border border-white/10 bg-[#0b0b0d] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-950/20">
+
+            <div className="flex items-start justify-between">
+
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <Compass size={19} />
               </div>
 
-              <h2 className="mt-5 break-words text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Everything you need to plan your trip
-              </h2>
-
-              <p className="mt-4 break-words text-sm leading-6 text-gray-600 sm:text-base sm:leading-7">
-                From personalized planning to interactive maps and saved
-                itineraries, everything is organized in one simple platform.
-              </p>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                01
+              </span>
 
             </div>
 
-            {/*  FEATURE CARDS */}
-
-            <div className="mt-10 grid w-full grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-
-              {features.map((feature) => {
-                const Icon = feature.icon;
-
-                return (
-                  <div
-                    key={feature.title}
-                    className="group min-w-0 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg sm:rounded-3xl sm:p-7"
-                  >
-
-                    {/*   FEATURE ICON */}
-
-                    <div className="mb-5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition-all duration-200 group-hover:bg-indigo-600 group-hover:text-white sm:h-12 sm:w-12">
-                      <Icon size={23} />
-                    </div>
-
-                    {/*  FEATURE TITLE */}
-
-                    <h3 className="break-words text-lg font-bold text-gray-900 sm:text-xl">
-                      {feature.title}
-                    </h3>
-
-                    {/*  FEATURE DESCRIPTION */}
-
-                    <p className="mt-3 break-words text-sm leading-6 text-gray-600 sm:text-base sm:leading-7">
-                      {feature.description}
-                    </p>
-
-                  </div>
-                );
-              })}
-
-            </div>
-
-          </div>
-        </section>
-
-        {/*  FINAL CTA SECTION */}
-
-        <section className="w-full overflow-hidden bg-white px-4 py-14 sm:px-6 sm:py-20 lg:py-24">
-
-          <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-2xl bg-gray-950 px-5 py-10 text-center text-white shadow-xl sm:rounded-3xl sm:px-8 sm:py-14 md:px-12">
-
-            {/* CTA ICON*/}
-
-            <div className="mx-auto flex h-13 w-13 items-center justify-center rounded-2xl bg-indigo-600 sm:h-14 sm:w-14">
-              <Compass
-                size={26}
-                className="!text-white sm:h-7 sm:w-7"
-              />
-            </div>
-
-            {/*  CTA TITLE  */}
-
-            <h2 className="mt-6 break-words text-2xl font-bold leading-tight !text-white sm:text-4xl">
-              Ready to plan your next adventure?
+            <h2 className="mt-5 text-lg font-bold text-white">
+              Personalized Planning
             </h2>
 
-            {/*  CTA DESCRIPTION */}
-
-            <p className="mx-auto mt-4 max-w-2xl break-words text-sm leading-6 !text-gray-300 sm:text-base sm:leading-7">
-              Build a personalized itinerary and make your travel planning
-              simpler with AI.
+            <p className="mt-2 text-xs leading-6 text-slate-500">
+              Build a travel plan around your own interests,
+              dates, travelers and budget.
             </p>
-
-            {/*  CTA BUTTON  */}
-
-            <Link
-              to="/planner"
-              className="group mt-7 inline-flex min-h-12 w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold !text-white shadow-lg shadow-indigo-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-500 hover:shadow-xl sm:w-auto sm:max-w-none sm:px-7"
-            >
-              <span>Plan My Trip</span>
-
-              <ArrowRight
-                size={18}
-                className="shrink-0 !text-white transition-transform duration-200 group-hover:translate-x-1"
-              />
-            </Link>
 
           </div>
 
-        </section>
+          {/* Card 2 — Itinerary */}
 
-      </main>
-    </Layout>
-  );
+          <div className="group rounded-2xl border border-white/10 bg-[#0b0b0d] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-950/20">
+
+            <div className="flex items-start justify-between">
+
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <CalendarDays size={19} />
+              </div>
+
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                02
+              </span>
+
+            </div>
+
+            <h2 className="mt-5 text-lg font-bold text-white">
+              Day-by-Day Itinerary
+            </h2>
+
+            <p className="mt-2 text-xs leading-6 text-slate-500">
+              Organize your journey into structured daily
+              activities and travel information.
+            </p>
+
+          </div>
+
+          {/* Card 3 — Weather */}
+
+          <div className="group rounded-2xl border border-white/10 bg-[#0b0b0d] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-950/20">
+
+            <div className="flex items-start justify-between">
+
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <CloudSun size={19} />
+              </div>
+
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                03
+              </span>
+
+            </div>
+
+            <h2 className="mt-5 text-lg font-bold text-white">
+              Weather-Aware Travel
+            </h2>
+
+            <p className="mt-2 text-xs leading-6 text-slate-500">
+              Keep weather information alongside your daily
+              itinerary for a more informed travel experience.
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* ==================================================
+            BOTTOM STATUS
+        ================================================== */}
+
+        <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#080809] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+
+          <div className="flex items-center gap-3">
+
+            <span className="h-2 w-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/60" />
+
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              AI Travel Planning System
+            </p>
+
+          </div>
+
+          <p className="text-[10px] uppercase tracking-wider text-slate-600">
+            Ready for your next journey
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+  )
 }
 
-export default Home;
+export default Home

@@ -1,315 +1,213 @@
-// =========================================================
-// ===================== NAVBAR ==============================
-// =========================================================
-
-import { useEffect, useState } from "react";
-import travelLogo from "../../assets/travel-logo.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom"
 import {
+  Compass,
+  Grid2X2,
+  LogIn,
   Menu,
   X,
-  Plane,
-  LogOut,
-  LayoutDashboard,
+  UserRound,
   Map,
-  LogIn,
-  UserPlus,
-} from "lucide-react";
+} from "lucide-react"
+import { useState } from "react"
 
 function Navbar() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // =========================================================
-  // ===================== STATE ==============================
-  // =========================================================
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
-
-  // =========================================================
-  // ================= LOGIN STATE SYNC =======================
-  // =========================================================
-
-  useEffect(() => {
-    const syncLoginState = () => {
-      setIsLoggedIn(
-        localStorage.getItem("isLoggedIn") === "true"
-      );
-    };
-
-    syncLoginState();
-
-    window.addEventListener(
-      "storage",
-      syncLoginState
-    );
-
-    return () => {
-      window.removeEventListener(
-        "storage",
-        syncLoginState
-      );
-    };
-  }, [location.pathname]);
-
-  // =========================================================
-  // ===================== CLOSE MENU =========================
-  // =========================================================
+  const location = useLocation()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const closeMenu = () => {
-    setMobileMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+  }
 
-  // =========================================================
-  // ======================== LOGOUT ==========================
-  // =========================================================
-
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("currentUser");
-
-    setIsLoggedIn(false);
-    setMobileMenuOpen(false);
-
-    alert("Logged out successfully! 👋");
-
-    navigate("/");
-  };
-
-  // =========================================================
-  // ===================== NAVIGATION =========================
-  // =========================================================
-
-  const navLinks = [
+  const navItems = [
     {
-      name: "Home",
+      label: "Overview",
       path: "/",
-      icon: null,
+      icon: Grid2X2,
     },
     {
-      name: "Plan Trip",
+      label: "Planner",
       path: "/planner",
+      icon: Compass,
+    },
+    {
+      label: "Dashboard",
+      path: "/dashboard",
       icon: Map,
     },
-    {
-      name: "Dashboard",
-      path: "/dashboard",
-      icon: LayoutDashboard,
-    },
-  ];
-
-  // =========================================================
-  // =========================== UI ===========================
-  // =========================================================
+  ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-md">
+    <nav className="fixed left-1/2 top-3 z-[2000] w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2">
+      <div className="rounded-2xl border border-white/10 bg-[#080809]/95 px-3 py-2 shadow-2xl shadow-black/40 backdrop-blur-xl sm:px-4">
 
-      <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
 
-        {/* ===================== LOGO ====================== */}
+          {/* ==================================================
+              BRAND
+          ================================================== */}
 
-        <Link
-          to="/"
-          onClick={closeMenu}
-          className="flex min-w-0 max-w-[calc(100%-52px)] items-center gap-2.5"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition duration-200 hover:scale-105">
-            <img
-              src={travelLogo}
-              alt="AI Travel Planner"
-              className="h-10 w-10 object-contain"
-            />
+          <Link
+            to="/"
+            onClick={closeMenu}
+            className="flex items-center gap-2.5"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/30">
+              <Compass size={18} strokeWidth={2} />
+            </div>
+
+            <div className="block">
+              <p className="text-sm font-black tracking-tight text-white">
+                AI TRAVEL
+                <span className="text-blue-500">.</span>
+              </p>
+
+              <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-slate-600">
+                Planner
+              </p>
+            </div>
+          </Link>
+
+          {/* ==================================================
+              DESKTOP NAVIGATION
+          ================================================== */}
+
+          <div className="hidden items-center gap-1 md:flex">
+
+            {navItems.map((item) => {
+              const Icon = item.icon
+
+              const isActive =
+                location.pathname === item.path
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      : "text-slate-500 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                >
+                  <Icon size={14} />
+                  {item.label}
+                </Link>
+              )
+            })}
+
           </div>
 
-          <span className="min-w-0 truncate text-sm font-bold tracking-tight text-gray-900 sm:text-lg">
-            AI Travel Planner
-          </span>
-        </Link>
+          {/* ==================================================
+              RIGHT ACTIONS
+          ================================================== */}
 
-        {/* ================= DESKTOP NAV =================== */}
+          <div className="hidden items-center gap-2 md:flex">
 
-        <div className="hidden items-center gap-1 lg:flex">
-
-          {navLinks.map((link) => {
-            const active =
-              location.pathname === link.path;
-
-            const Icon = link.icon;
-
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 ${
-                  active
-                    ? "bg-indigo-50 text-indigo-600"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-indigo-600"
-                }`}
-              >
-                {Icon && <Icon size={16} />}
-                {link.name}
-              </Link>
-            );
-          })}
-
-          <div className="ml-2 h-6 w-px bg-gray-200" />
-
-          {/* ================= LOGGED IN =================== */}
-
-          {isLoggedIn ? (
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="ml-2 inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+            <Link
+              to="/login"
+              className="flex items-center gap-2 rounded-xl border border-white/10 px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 transition hover:border-white/20 hover:bg-white/[0.04] hover:text-white"
             >
-              <LogOut size={16} />
-              Logout
-            </button>
-          ) : (
-            <>
-              {/* ================= LOGIN =================== */}
+              <LogIn size={14} />
+              Login
+            </Link>
 
-              <Link
-                to="/login"
-                className="ml-1 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-600 transition duration-200 hover:bg-gray-50 hover:text-indigo-600"
-              >
-                <LogIn size={16} />
-                Login
-              </Link>
+            <Link
+              to="/register"
+              className="flex items-center gap-2 rounded-xl bg-white px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-black transition hover:bg-blue-500 hover:text-white"
+            >
+              <UserRound size={14} />
+              Register
+            </Link>
 
-              {/* ================= REGISTER ================ */}
+          </div>
 
-              <Link
-                to="/register"
-                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md"
-              >
-                <UserPlus size={16} />
-                Register
-              </Link>
-            </>
-          )}
+          {/* ==================================================
+              MOBILE MENU BUTTON
+          ================================================== */}
+
+          <button
+            type="button"
+            onClick={() =>
+              setIsMenuOpen(!isMenuOpen)
+            }
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-300 transition hover:bg-white/[0.07] hover:text-white md:hidden"
+            aria-label={
+              isMenuOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
+            }
+          >
+            {isMenuOpen ? (
+              <X size={19} />
+            ) : (
+              <Menu size={19} />
+            )}
+          </button>
 
         </div>
 
-        {/* ================= MOBILE BUTTON ================= */}
+        {/* ==================================================
+            MOBILE NAVIGATION
+        ================================================== */}
 
-        <button
-          type="button"
-          onClick={() =>
-            setMobileMenuOpen((prev) => !prev)
-          }
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-700 transition hover:bg-gray-100 lg:hidden"
-          aria-label={
-            mobileMenuOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
-          }
-          aria-expanded={mobileMenuOpen}
-        >
-          {mobileMenuOpen ? (
-            <X size={23} />
-          ) : (
-            <Menu size={23} />
-          )}
-        </button>
+        {isMenuOpen && (
+          <div className="border-t border-white/10 pb-2 pt-3 md:hidden">
 
-      </nav>
+            <div className="flex flex-col gap-1">
 
-      {/* ===================== MOBILE NAV ================= */}
+              {navItems.map((item) => {
+                const Icon = item.icon
 
-      {mobileMenuOpen && (
-        <div className="border-t border-gray-200 bg-white shadow-lg lg:hidden">
-
-          <div className="mx-auto w-full max-w-7xl min-w-0 px-4 py-4 sm:px-6">
-
-            <div className="flex flex-col gap-2">
-
-              {/* ================= MOBILE LINKS ============ */}
-
-              {navLinks.map((link) => {
-                const active =
-                  location.pathname === link.path;
-
-                const Icon = link.icon;
+                const isActive =
+                  location.pathname === item.path
 
                 return (
                   <Link
-                    key={link.path}
-                    to={link.path}
+                    key={item.path}
+                    to={item.path}
                     onClick={closeMenu}
-                    className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                      active
-                        ? "bg-indigo-50 text-indigo-600"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                    className={`flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold uppercase tracking-wider transition ${
+                      isActive
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
                     }`}
                   >
-                    {Icon ? (
-                      <Icon size={18} />
-                    ) : (
-                      <Plane size={18} />
-                    )}
-
-                    {link.name}
+                    <Icon size={16} />
+                    {item.label}
                   </Link>
-                );
+                )
               })}
 
-              <div className="my-1 h-px bg-gray-100" />
+              <div className="mt-2 grid grid-cols-2 gap-2">
 
-              {/* ================= MOBILE AUTH ============== */}
-
-              {isLoggedIn ? (
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-400"
                 >
-                  <LogOut size={18} />
-                  Logout
-                </button>
-              ) : (
-                <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
+                  <LogIn size={15} />
+                  Login
+                </Link>
 
-                  {/* ================= MOBILE LOGIN ========= */}
+                <Link
+                  to="/register"
+                  onClick={closeMenu}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
+                >
+                  <UserRound size={15} />
+                  Register
+                </Link>
 
-                  <Link
-                    to="/login"
-                    onClick={closeMenu}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
-                  >
-                    <LogIn size={17} />
-                    Login
-                  </Link>
-
-                  {/* ================= MOBILE REGISTER ====== */}
-
-                  <Link
-                    to="/register"
-                    onClick={closeMenu}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                  >
-                    <UserPlus size={17} />
-                    Register
-                  </Link>
-
-                </div>
-              )}
+              </div>
 
             </div>
 
           </div>
+        )}
 
-        </div>
-      )}
-
-    </header>
-  );
+      </div>
+    </nav>
+  )
 }
 
-export default Navbar;
+export default Navbar

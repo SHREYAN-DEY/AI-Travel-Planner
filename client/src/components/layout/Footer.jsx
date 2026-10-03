@@ -1,119 +1,165 @@
-
-// FOOTER 
-
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 import {
-  MapPin,
-  Mail,
-  Phone,
   ArrowUpRight,
-} from "lucide-react";
-import travelLogo from "../../assets/travel-logo.png";
+  Compass,
+  Mail,
+} from "lucide-react"
 
 function Footer() {
   return (
-    <footer className="w-full overflow-hidden bg-gray-950 text-white">
-      {/*  MAIN FOOTER  */}
-      <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-        <div className="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
-          {/* BRAND */}
-          <div className="min-w-0">
+    <footer className="border-t border-white/10 bg-[#050505] px-4 py-8 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+
+        {/* Main Footer */}
+        <div className="grid gap-8 md:grid-cols-[1.3fr_0.7fr_0.7fr_1fr]">
+
+          {/* Brand */}
+          <div>
             <Link
               to="/"
-              className="inline-flex items-center gap-3"
+              className="inline-flex items-center gap-2.5"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white p-1.5 shadow-sm">
-                <img
-                  src={travelLogo}
-                  alt="AI Travel Planner logo"
-                  className="h-full w-full object-contain"
-                />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+                <Compass size={18} />
               </div>
 
-              <span className="text-xl font-bold tracking-tight text-white">
-                AI Travel Planner
-              </span>
+              <div>
+                <p className="text-sm font-black tracking-tight">
+                  AI TRAVEL<span className="text-blue-500">.</span>
+                </p>
+
+                <p className="text-[8px] font-semibold uppercase tracking-[0.25em] text-slate-600">
+                  Planner
+                </p>
+              </div>
             </Link>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-gray-400 sm:text-base sm:leading-7">
-              Plan smarter, organize your journey and create personalized
-              travel experiences in one simple platform.
+            <p className="mt-4 max-w-xs text-xs leading-5 text-slate-600">
+              Plan personalized journeys with a modern AI-powered travel
+              planning interface.
             </p>
+
+            {/* Social Icons */}
+           <div className="mt-5 flex items-center gap-2">
+  <a
+    href="mailto:contact@example.com"
+    aria-label="Email"
+    className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-500 transition hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-blue-400"
+  >
+    <Mail size={14} />
+  </a>
+</div>
           </div>
 
-          {/* QUICK LINKS */}
+          {/* Explore */}
           <div>
-            <h3 className="text-base font-bold text-white sm:text-lg">
-              Quick Links
-            </h3>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-400">
+              Explore
+            </p>
 
-            <nav className="mt-4 flex flex-col items-start gap-3 text-sm text-gray-400 sm:text-base">
+            <div className="mt-4 flex flex-col gap-2.5">
               <Link
                 to="/"
-                className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white"
+                className="text-xs text-slate-600 transition hover:text-white"
               >
-                Home
+                Overview
               </Link>
 
               <Link
                 to="/planner"
-                className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white"
+                className="text-xs text-slate-600 transition hover:text-white"
               >
-                Plan Trip
-                <ArrowUpRight size={14} />
+                Planner
               </Link>
 
               <Link
                 to="/dashboard"
-                className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white"
+                className="text-xs text-slate-600 transition hover:text-white"
               >
                 Dashboard
               </Link>
-
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-1.5 transition-colors duration-200 hover:text-white"
-              >
-                Login
-              </Link>
-            </nav>
+            </div>
           </div>
 
-          {/* CONTACT */}
+          {/* Account */}
           <div>
-            <h3 className="text-base font-bold text-white sm:text-lg">
-              Travel Support
-            </h3>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-400">
+              Account
+            </p>
 
-            <div className="mt-4 flex flex-col gap-3 text-sm text-gray-400 sm:text-base">
-              <div className="flex items-start gap-3">
-                <MapPin size={18} className="mt-0.5 shrink-0 text-indigo-400" />
-                <span>Travel planning platform · India</span>
+            <div className="mt-4 flex flex-col gap-2.5">
+              <Link
+                to="/login"
+                className="text-xs text-slate-600 transition hover:text-white"
+              >
+                Sign In
+              </Link>
+
+              <Link
+                to="/register"
+                className="text-xs text-slate-600 transition hover:text-white"
+              >
+                Register
+              </Link>
+
+              <Link
+                to="/dashboard"
+                className="text-xs text-slate-600 transition hover:text-white"
+              >
+                My Trips
+              </Link>
+            </div>
+          </div>
+
+          {/* System Status */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-400">
+              System Status
+            </p>
+
+            <div className="mt-4 rounded-xl border border-white/10 bg-[#0b0b0d] p-4">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/60" />
+
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Frontend Online
+                </span>
               </div>
 
-              <div className="flex items-start gap-3">
-                <Mail size={18} className="mt-0.5 shrink-0 text-indigo-400" />
-                <span>Personalized trip planning</span>
-              </div>
+              <p className="mt-3 text-[9px] leading-4 text-slate-700">
+                Travel planning interface is ready for use.
+              </p>
 
-              <div className="flex items-start gap-3">
-                <Phone size={18} className="mt-0.5 shrink-0 text-indigo-400" />
-                <span>Plan, save and explore your trips</span>
-              </div>
+              <Link
+                to="/planner"
+                className="mt-4 inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-blue-400 transition hover:text-blue-300"
+              >
+                Start Planning
+                <ArrowUpRight size={12} />
+              </Link>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* COPYRIGHT */}
-      <div className="border-t border-gray-800">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-5 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:text-sm lg:px-8">
-          <p>© 2026 AI Travel Planner. All Rights Reserved.</p>
-          <p>Plan smarter. Travel better.</p>
+        {/* Bottom Footer */}
+        <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+
+          <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-700">
+            © {new Date().getFullYear()} AI Travel Planner
+          </p>
+
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+
+            <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-slate-700">
+              Personalized Travel Planning System
+            </span>
+          </div>
+
         </div>
       </div>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer

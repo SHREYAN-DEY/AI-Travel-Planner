@@ -1,39 +1,54 @@
-//  DESTINATION INPUT 
+import { MapPin } from "lucide-react"
 
-import { MapPin } from "lucide-react";
-
-function DestinationInput({ value, onChange }) {
+function DestinationInput({
+  value,
+  onChange,
+  error,
+}) {
   return (
-    <div>
-      {/*  LABEL  */}
+    <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+            01 / Destination
+          </p>
 
-      <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-800">
+          <h2 className="mt-1 text-lg font-black">
+            Where are you going?
+          </h2>
+        </div>
+
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+          <MapPin size={18} />
+        </div>
+      </div>
+
+      <div className="relative">
         <MapPin
-          size={18}
-          className="text-indigo-600"
+          size={17}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600"
         />
-        Where do you want to go?
-      </label>
 
-      {/*  INPUT  */}
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          placeholder="Enter destination..."
+          className={`w-full rounded-xl border bg-[#111113] py-3.5 pl-11 pr-4 text-sm font-semibold text-white outline-none transition placeholder:text-slate-700 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/10 ${
+            error
+              ? "border-red-500/50"
+              : "border-white/10"
+          }`}
+        />
+      </div>
 
-      <input
-        type="text"
-        name="destination"
-        value={value}
-        onChange={onChange}
-        placeholder="Enter destination (e.g. Puri, Goa, Darjeeling)"
-        autoComplete="off"
-        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3.5 text-gray-800 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-      />
-
-      {/*  HELPER TEXT  */}
-
-      <p className="mt-2 text-xs text-gray-500">
-        Enter a city, destination, or place you want to explore.
-      </p>
+      {error && (
+        <p className="mt-2 text-[10px] font-semibold text-red-400">
+          {error}
+        </p>
+      )}
     </div>
-  );
+  )
 }
 
-export default DestinationInput;
+export default DestinationInput

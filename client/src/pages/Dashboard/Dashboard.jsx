@@ -1,475 +1,360 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Layout from "../../components/layout/Layout";
-
 import {
-  Map,
-  Navigation,
-  FileCheck2,
-  Heart,
-  Plus,
   ArrowRight,
   CalendarDays,
+  Compass,
+  MapPin,
+  Plus,
+ Navigation,
   Users,
   Wallet,
-  MapPin,
-  Trash2,
-  Eye,
-  Clock3,
-} from "lucide-react";
+} from "lucide-react"
+import { Link } from "react-router-dom"
 
 function Dashboard() {
-  const navigate = useNavigate();
-
-  const [savedTrips, setSavedTrips] = useState([]);
-
-
-  // LOAD SAVED TRIPS
- 
-  useEffect(() => {
-    loadTrips();
-  }, []);
-
-  const loadTrips = () => {
-    try {
-      const storedTrips = JSON.parse(
-        localStorage.getItem("savedTrips") || "[]"
-      );
-
-      setSavedTrips(
-        Array.isArray(storedTrips) ? storedTrips : []
-      );
-    } catch (error) {
-      console.error("Unable to load saved trips:", error);
-      setSavedTrips([]);
-    }
-  };
-
-  // DELETE TRIP
- 
-  const handleDeleteTrip = (tripId) => {
-    const shouldDelete = window.confirm(
-      "Are you sure you want to delete this trip?"
-    );
-
-    if (!shouldDelete) return;
-
-    const updatedTrips = savedTrips.filter(
-      (trip) => trip.id !== tripId
-    );
-
-    setSavedTrips(updatedTrips);
-
-    localStorage.setItem(
-      "savedTrips",
-      JSON.stringify(updatedTrips)
-    );
-  };
-
-  // VIEW ITINERARY
-  
-  const handleViewTrip = (trip) => {
-    navigate("/itinerary", {
-      state: trip,
-    });
-  };
-
-  // UNIQUE DESTINATIONS
-  
-  const uniqueDestinations = new Set(
-    savedTrips
-      .map((trip) => trip?.destination?.trim())
-      .filter(Boolean)
-      .map((destination) => destination.toLowerCase())
-  ).size;
-
-  // FORMAT BUDGET
-  
-  const formatBudget = (trip) => {
-    const min = Number(trip?.budgetMin);
-    const max = Number(trip?.budgetMax);
-
-    if (!min && !max) {
-      return "Not specified";
-    }
-
-    if (min && max) {
-      return `₹${min.toLocaleString("en-IN")} – ₹${max.toLocaleString(
-        "en-IN"
-      )}`;
-    }
-
-    if (min) {
-      return `From ₹${min.toLocaleString("en-IN")}`;
-    }
-
-    return `Up to ₹${max.toLocaleString("en-IN")}`;
-  };
-
-  // FORMAT DATE
-  
-  const formatCreatedDate = (date) => {
-    if (!date) return "";
-
-    const parsedDate = new Date(date);
-
-    if (Number.isNaN(parsedDate.getTime())) {
-      return "";
-    }
-
-    return parsedDate.toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
+  const savedTrips = []
 
   return (
-    <Layout>
-      <div className="min-h-screen w-full overflow-x-hidden bg-gray-50">
-        <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <section className="min-h-[calc(100vh-6rem)] bg-[#050505] px-4 pb-12 pt-4 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
 
-          {/*  HEADER  */}
-          <section className="mb-10">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              
-              <div className="min-w-0">
-                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-indigo-600">
-                  <Navigation size={14} />
-                  Travel Dashboard
-                </div>
+        {/* HEADER */}
 
-                <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                  Welcome back 👋
-                </h1>
+        <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+              <Navigation size={13} />
+              Travel Command Center
+            </div>
 
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
-                  Manage your saved trips and create new personalized
-                  travel plans from one place.
-                </p>
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+              YOUR TRAVEL
+              <span className="text-blue-500"> DASHBOARD.</span>
+            </h1>
+
+            <p className="mt-2 max-w-xl text-xs leading-6 text-slate-500 sm:text-sm">
+              Manage your journeys, review saved plans and launch a new
+              personalized itinerary.
+            </p>
+          </div>
+
+          <Link
+            to="/planner"
+            className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-500"
+          >
+            <Plus size={16} />
+            New Journey
+            <ArrowRight
+              size={15}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
+
+        {/* QUICK STATS */}
+
+        <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <Compass size={17} />
               </div>
 
-              <Link
-                to="/planner"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold !text-white shadow-lg shadow-indigo-100 transition hover:-translate-y-0.5 hover:bg-indigo-700"
-              >
-                <Plus size={18} />
-                New Trip
-              </Link>
-
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-700">
+                01
+              </span>
             </div>
-          </section>
 
-          {/* STATS  */}
-          <section className="mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600">
+              Saved Trips
+            </p>
 
-            <StatCard
-              icon={<Map size={23} />}
-              label="Saved Trips"
-              value={savedTrips.length}
-              description="Trips saved on this device."
-            />
+            <p className="mt-1 text-2xl font-black">
+              {savedTrips.length}
+            </p>
+          </div>
 
-            <StatCard
-              icon={<FileCheck2 size={23} />}
-              label="Generated Plans"
-              value={savedTrips.length}
-              description="Personalized plans created."
-            />
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <CalendarDays size={17} />
+              </div>
 
-            <StatCard
-              icon={<MapPin size={23} />}
-              label="Destinations"
-              value={uniqueDestinations}
-              description="Unique destinations explored."
-              className="sm:col-span-2 lg:col-span-1"
-            />
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-700">
+                02
+              </span>
+            </div>
 
-          </section>
+            <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600">
+              Active Plans
+            </p>
 
-          {/*  SAVED TRIPS  */}
-          <section className="mb-10">
+            <p className="mt-1 text-2xl font-black">0</p>
+          </div>
 
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                Saved Trips
-              </h2>
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <Users size={17} />
+              </div>
 
-              <p className="mt-2 text-sm text-gray-500">
-                Your previously created travel plans.
-              </p>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-700">
+                03
+              </span>
+            </div>
+
+            <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600">
+              Travel Plans
+            </p>
+
+            <p className="mt-1 text-2xl font-black">0</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                <Wallet size={17} />
+              </div>
+
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-700">
+                04
+              </span>
+            </div>
+
+            <p className="mt-4 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-600">
+              Budget Tracking
+            </p>
+
+            <p className="mt-1 text-sm font-black text-blue-400">
+              Ready
+            </p>
+          </div>
+        </div>
+
+        {/* MAIN GRID */}
+
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+
+          {/* SAVED TRIPS */}
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-5">
+
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+                  Journey Archive
+                </p>
+
+                <h2 className="mt-1 text-xl font-black">
+                  Saved Trips
+                </h2>
+              </div>
+
+              <Compass size={19} className="text-blue-400" />
             </div>
 
             {savedTrips.length === 0 ? (
+              <div className="flex min-h-[270px] flex-col items-center justify-center text-center">
 
-              /*  EMPTY STATE  */
-              <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-5 py-14 text-center shadow-sm sm:px-10">
-
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
-                  <Map size={28} />
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-slate-600">
+                  <MapPin size={23} />
                 </div>
 
-                <h3 className="mt-5 text-xl font-bold text-gray-900">
-                  No saved trips yet
+                <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
+                  Archive Empty
+                </p>
+
+                <h3 className="mt-2 text-lg font-black text-white">
+                  No saved journeys yet
                 </h3>
 
-                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-                  Create your first personalized travel itinerary
-                  and it will appear here automatically.
+                <p className="mt-2 max-w-sm text-xs leading-5 text-slate-600">
+                  Your generated travel plans will appear here when
+                  they are saved.
                 </p>
 
                 <Link
                   to="/planner"
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-semibold !text-white shadow-lg shadow-indigo-100 transition hover:bg-indigo-700"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-blue-400 transition hover:bg-blue-500/20"
                 >
-                  Plan Your First Trip
-                  <ArrowRight size={18} />
+                  <Plus size={14} />
+                  Create First Journey
                 </Link>
-
               </div>
-
             ) : (
-
-              /*  TRIP CARDS  */
-
-              <div className="grid gap-5 lg:grid-cols-2">
-
+              <div className="mt-4 space-y-2">
                 {savedTrips.map((trip) => (
-
-                  <article
+                  <div
                     key={trip.id}
-                    className="group overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg"
+                    className="rounded-xl border border-white/10 bg-[#111113] p-4"
                   >
-
-                    {/* Card Top */}
-                    <div className="p-5 sm:p-6">
-
-                      <div className="flex items-start justify-between gap-4">
-
-                        <div className="min-w-0 flex-1">
-
-                          <div className="flex items-start gap-2.5">
-
-                            <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                              <MapPin size={18} />
-                            </div>
-
-                            <div className="min-w-0">
-                              <h3 className="break-words text-xl font-bold text-gray-900">
-                                {trip.destination ||
-                                  "Unknown destination"}
-                              </h3>
-
-                              <p className="mt-1 break-words text-sm capitalize text-gray-500">
-                                {trip.travelStyle ||
-                                  "Travel plan"}
-                              </p>
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDeleteTrip(trip.id)
-                          }
-                          className="shrink-0 rounded-xl p-2.5 text-gray-400 transition hover:bg-red-50 hover:text-red-600"
-                          title="Delete trip"
-                          aria-label="Delete trip"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-
-                      </div>
-
-                      {/* Created Date */}
-                      {trip.createdAt && (
-                        <div className="mt-4 flex items-center gap-2 text-xs text-gray-400">
-                          <Clock3 size={14} />
-                          Created {formatCreatedDate(trip.createdAt)}
-                        </div>
-                      )}
-
-                      {/* Details */}
-                      <div className="mt-6 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
-
-                        <InfoBox
-                          icon={<CalendarDays size={18} />}
-                          label="Duration"
-                          value={
-                            trip.duration
-                              ? `${trip.duration} ${
-                                  String(trip.duration) === "1"
-                                    ? "Day"
-                                    : "Days"
-                                }`
-                              : "—"
-                          }
-                        />
-
-                        <InfoBox
-                          icon={<Users size={18} />}
-                          label="Travelers"
-                          value={trip.numTravelers || "—"}
-                        />
-
-                        <InfoBox
-                          icon={<Wallet size={18} />}
-                          label="Budget"
-                          value={formatBudget(trip)}
-                        />
-
-                        <InfoBox
-                          icon={<Heart size={18} />}
-                          label="Interests"
-                          value={
-                            Array.isArray(trip.interests)
-                              ? `${trip.interests.length} Selected`
-                              : "0 Selected"
-                          }
-                        />
-
-                      </div>
-
-                      {/* Interests */}
-                      {Array.isArray(trip.interests) &&
-                        trip.interests.length > 0 && (
-                          <div className="mt-5 flex flex-wrap gap-2">
-                            {trip.interests
-                              .slice(0, 4)
-                              .map((interest) => (
-                                <span
-                                  key={interest}
-                                  className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
-                                >
-                                  {interest}
-                                </span>
-                              ))}
-
-                            {trip.interests.length > 4 && (
-                              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">
-                                +{trip.interests.length - 4} more
-                              </span>
-                            )}
-                          </div>
-                        )}
-
-                    </div>
-
-                    {/* Card Actions */}
-                    <div className="border-t border-gray-100 bg-gray-50/70 p-4 sm:px-6">
-
-                      <div className="flex flex-col gap-3 sm:flex-row">
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleViewTrip(trip)
-                          }
-                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold !text-white shadow-sm transition hover:bg-indigo-700"
-                        >
-                          <Eye size={18} />
-                          View Itinerary
-                        </button>
-
-                        <Link
-                          to="/planner"
-                          className="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 font-semibold !text-gray-900 transition hover:border-indigo-300 hover:bg-indigo-50"
-                        >
-                          Plan New
-                        </Link>
-
-                      </div>
-
-                    </div>
-
-                  </article>
-
+                    {trip.destination}
+                  </div>
                 ))}
-
               </div>
             )}
+          </div>
 
-          </section>
+          {/* LAUNCH CARD */}
 
-          {/*  CREATE NEW TRIP */}
-          <section className="rounded-3xl bg-gradient-to-br from-gray-900 to-gray-800 p-7 text-center text-white shadow-xl sm:p-10">
+          <div className="rounded-2xl border border-blue-500/20 bg-blue-600 p-5 shadow-2xl shadow-blue-950/20">
 
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10">
-              <Plus size={28} />
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-100">
+                  Mission Control
+                </p>
+
+                <h2 className="mt-2 text-2xl font-black">
+                  New Itinerary
+                </h2>
+
+                <p className="mt-2 max-w-sm text-xs leading-5 text-blue-100/70">
+                  Configure your destination, dates, travelers,
+                  budget and interests to begin.
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                <Navigation size={21} />
+              </div>
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold sm:text-3xl">
-              Plan a New Trip
-            </h2>
+            <div className="mt-6 space-y-2">
+              <div className="flex items-center gap-3 rounded-xl bg-black/15 px-4 py-3">
+                <MapPin size={15} />
 
-            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-gray-300 sm:text-base">
-              Choose your destination, budget, interests and travel
-              style to create another personalized itinerary.
-            </p>
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-blue-100/60">
+                    Destination
+                  </p>
+
+                  <p className="text-xs font-bold">
+                    Personal destination
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-xl bg-black/15 px-4 py-3">
+                <CalendarDays size={15} />
+
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-blue-100/60">
+                    Schedule
+                  </p>
+
+                  <p className="text-xs font-bold">
+                    Flexible dates
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-xl bg-black/15 px-4 py-3">
+                <Wallet size={15} />
+
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-blue-100/60">
+                    Budget
+                  </p>
+
+                  <p className="text-xs font-bold">
+                    Custom range
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <Link
               to="/planner"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold !text-gray-900 transition hover:-translate-y-0.5 hover:bg-gray-100"
+              className="group mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-xs font-black uppercase tracking-wider text-black transition hover:bg-slate-100"
             >
-              Start Planning
-              <ArrowRight size={18} />
+              Launch Planner
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
             </Link>
+          </div>
+        </div>
 
-          </section>
+        {/* SYSTEM STATUS */}
 
-        </main>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Travel Engine
+              </p>
+
+              <span className="h-2 w-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/60" />
+            </div>
+
+            <p className="mt-3 text-sm font-black">
+  Frontend Ready
+</p>
+
+<p className="mt-1 text-[9px] text-slate-700">
+  Planning interface is ready for trip configuration
+</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Weather System
+              </p>
+
+              <span className="h-2 w-2 rounded-full bg-slate-700" />
+            </div>
+
+            <p className="mt-3 text-sm font-black">
+              Awaiting API
+            </p>
+
+            <p className="mt-1 text-[9px] text-slate-700">
+              Live weather integration comes later
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Data Storage
+              </p>
+
+              <span className="h-2 w-2 rounded-full bg-slate-700" />
+            </div>
+
+            <p className="mt-3 text-sm font-black">
+              Local Interface
+            </p>
+
+            <p className="mt-1 text-[9px] text-slate-700">
+              Backend persistence will be connected later
+            </p>
+          </div>
+        </div>
+
+        {/* STATUS BAR */}
+
+        <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-[#080809] px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+
+            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-600">
+              AI Travel Planning System
+            </span>
+          </div>
+
+          <span className="text-[9px] uppercase tracking-wider text-slate-700">
+            Dashboard Interface
+          </span>
+        </div>
+
       </div>
-    </Layout>
-  );
+    </section>
+  )
 }
 
-/*  STAT CARD  */
-
-function StatCard({
-  icon,
-  label,
-  value,
-  description,
-  className = "",
-}) {
-  return (
-    <div
-      className={`rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${className}`}
-    >
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-        {icon}
-      </div>
-
-      <p className="text-sm text-gray-500">{label}</p>
-
-      <h2 className="mt-1 text-3xl font-bold text-gray-900">
-        {value}
-      </h2>
-
-      <p className="mt-2 text-sm text-gray-500">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-/*  INFO BOX  */
-
-function InfoBox({ icon, label, value }) {
-  return (
-    <div className="min-w-0 rounded-2xl bg-gray-50 p-4">
-      <div className="mb-2 text-gray-700">{icon}</div>
-
-      <p className="text-xs text-gray-500">{label}</p>
-
-      <p className="mt-1 break-words text-sm font-semibold text-gray-900">
-        {value}
-      </p>
-    </div>
-  );
-}
-
-export default Dashboard;
+export default Dashboard

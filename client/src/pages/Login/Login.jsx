@@ -1,344 +1,337 @@
-
-//  LOGIN 
-
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Layout from "../../components/layout/Layout";
-
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import {
-  LogIn,
-  Mail,
-  Lock,
-  Plane,
   ArrowRight,
+  CheckCircle2,
   Eye,
   EyeOff,
-} from "lucide-react";
+  LockKeyhole,
+  Mail,
+  Globe2,
+} from "lucide-react"
+import { loginUser } from "../../services/auth"
 
 function Login() {
-  const navigate = useNavigate();
-
-  //  FORM STATE 
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  });
+  })
 
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [errors, setErrors] = useState({})
+  const [message, setMessage] = useState("")
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
 
-  //  FORM CHANGE 
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
 
-  //  SUBMIT 
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }))
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    setMessage("")
+  }
 
-    const email = formData.email.trim().toLowerCase();
-    const password = formData.password.trim();
+  const validateForm = () => {
+    const newErrors = {}
 
-    //  VALIDATION 
-
-    if (!email || !password) {
-      alert("Please fill in all fields.");
-      return;
+    if (!formData.email.trim()) {
+      newErrors.email = "Enter your email"
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Enter a valid email"
     }
 
-    if (!email.includes("@")) {
-      alert("Please enter a valid email address.");
-      return;
+    if (!formData.password) {
+      newErrors.password = "Enter your password"
     }
 
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters.");
-      return;
-    }
+    setErrors(newErrors)
+
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!validateForm()) return
 
     try {
-      setLoading(true);
+      const result = await loginUser(formData)
 
-      // Small delay for a smoother frontend experience
-      await new Promise((resolve) =>
-        setTimeout(resolve, 700)
-      );
+      setMessage(result.message || "Login successful")
+      setShowSuccessPopup(true)
 
-      //  STORED USER 
+      /*
+        Frontend-only for now.
+        Real authentication/API integration will be added later.
+      */
 
-      const storedUser = JSON.parse(
-        localStorage.getItem("user") || "null"
-      );
-
-      // No registered account
-      if (!storedUser) {
-        alert(
-          "No account found. Please create an account first."
-        );
-        return;
-      }
-
-      // Email check
-      if (
-        storedUser.email?.toLowerCase() !== email
-      ) {
-        alert("No account found with this email.");
-        return;
-      }
-
-      // Password check
-      if (storedUser.password !== password) {
-        alert("Incorrect password. Please try again.");
-        return;
-      }
-
-      //  LOGIN STATE 
-
-      localStorage.setItem(
-        "isLoggedIn",
-        "true"
-      );
-
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify({
-          email: storedUser.email,
-          name:
-            storedUser.name ||
-            email.split("@")[0],
-        })
-      );
-
-      alert("Login successful! 🎉");
-
-      navigate("/dashboard");
-
+      setTimeout(() => {
+        navigate("/dashboard")
+      }, 1800)
     } catch (error) {
-      console.error("Login error:", error);
-
-      alert(
-        "Unable to login. Please try again."
-      );
-    } finally {
-      setLoading(false);
+      console.error(error)
+      setMessage("Something went wrong. Please try again.")
     }
-  };
+  }
 
-  //  UI 
+  // Shared input styling.
+  // These autofill utilities keep Chrome's saved
+  // email/password fields dark instead of showing white.
+  const inputClass =
+    "w-full bg-transparent px-3 py-3.5 text-sm font-medium text-white outline-none placeholder:text-slate-700 autofill:bg-transparent autofill:text-white [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:text-white [&:-webkit-autofill]:shadow-[0_0_0px_1000px_#111113_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:white]"
 
   return (
-    <Layout>
-      <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 px-4 py-10 sm:py-16">
+    <section className="relative min-h-[calc(100vh-6rem)] bg-[#050505] px-4 py-8 text-white sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-[70vh] max-w-6xl items-center justify-center">
+        <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-[#0b0b0d] shadow-2xl shadow-blue-950/20 lg:grid-cols-2">
 
-        <main className="mx-auto flex w-full max-w-md items-center justify-center">
+          {/* LEFT PANEL */}
+          <div className="relative hidden overflow-hidden bg-blue-600 p-8 lg:flex lg:flex-col lg:justify-between">
+            <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
 
-          <div className="w-full">
-
-            {/*  HEADER  */}
-
-            <div className="mb-8 text-center">
-
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-100">
-                <LogIn size={26} />
+            <div className="relative">
+              <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+                <Globe2 size={21} />
               </div>
 
-              <h1 className="mt-5 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Welcome Back
-              </h1>
-
-              <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-gray-600 sm:text-base">
-                Login to continue planning your personalized trips.
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-100">
+                AI Travel Planning
               </p>
 
-            </div>
-
-            {/*  LOGIN CARD  */}
-
-            <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-5"
-              >
-
-                {/*  EMAIL  */}
-
-                <div>
-
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-semibold text-gray-800"
-                  >
-                    Email Address
-                  </label>
-
-                  <div className="relative">
-
-                    <Mail
-                      size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-
-                    <input
-                      id="email"
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Enter your email"
-                      autoComplete="email"
-                      className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-11 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                    />
-
-                  </div>
-
-                </div>
-
-                {/*  PASSWORD  */}
-
-                <div>
-
-                  <label
-                    htmlFor="password"
-                    className="mb-2 block text-sm font-semibold text-gray-800"
-                  >
-                    Password
-                  </label>
-
-                  <div className="relative">
-
-                    <Lock
-                      size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-
-                    <input
-                      id="password"
-                      type={
-                        showPassword
-                          ? "text"
-                          : "password"
-                      }
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Enter your password"
-                      autoComplete="current-password"
-                      className="w-full rounded-xl border border-gray-300 bg-white py-3.5 pl-11 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowPassword(
-                          (prev) => !prev
-                        )
-                      }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
-                      aria-label={
-                        showPassword
-                          ? "Hide password"
-                          : "Show password"
-                      }
-                    >
-                      {showPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
-                    </button>
-
-                  </div>
-
-                </div>
-
-                {/*  LOGIN BUTTON  */}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 font-semibold !text-white shadow-lg shadow-indigo-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
-                >
-
-                  {loading ? (
-                    <>
-                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-
-                      <span className="!text-white">
-                        Logging In...
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <LogIn size={19} />
-
-                      <span className="!text-white">
-                        Login
-                      </span>
-                    </>
-                  )}
-
-                </button>
-
-              </form>
-
-              {/*  DIVIDER  */}
-
-              <div className="my-6 flex items-center gap-3">
-
-                <div className="h-px flex-1 bg-gray-200" />
-
-                <span className="text-xs font-medium text-gray-400">
-                  OR
+              <h1 className="mt-3 max-w-sm text-4xl font-black leading-tight">
+                YOUR NEXT
+                <span className="block text-blue-100">
+                  JOURNEY STARTS HERE.
                 </span>
+              </h1>
 
-                <div className="h-px flex-1 bg-gray-200" />
-
-              </div>
-
-              {/*  REGISTER  */}
-
-              <div className="text-center">
-
-                <p className="text-sm text-gray-500">
-                  Don't have an account?
-                </p>
-
-                <Link
-                  to="/register"
-                  className="mt-2 inline-flex items-center gap-1.5 font-semibold text-indigo-600 transition hover:text-indigo-700"
-                >
-                  Create an Account
-                  <ArrowRight size={16} />
-                </Link>
-
-              </div>
-
+              <p className="mt-5 max-w-sm text-sm leading-6 text-blue-100/70">
+                Access your travel workspace and continue planning
+                personalized journeys.
+              </p>
             </div>
 
-            {/*  FRONTEND INDICATOR  */}
+            <div className="relative rounded-2xl bg-black/15 p-4">
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-blue-100/60">
+                System
+              </p>
 
-            <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
-              <Plane size={14} />
-              <span>
-                AI Travel Planner
-              </span>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-white shadow-lg shadow-white/50" />
+
+                <span className="text-xs font-bold">
+                  Travel Planner Ready
+                </span>
+              </div>
             </div>
-
           </div>
 
-        </main>
+          {/* RIGHT PANEL */}
+          <div className="p-6 sm:p-8 lg:p-10">
+            <div className="mb-7">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-blue-400 lg:hidden">
+               <Globe2 size={21} />
+                AI Travel Planner
+              </div>
+
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+                Welcome back
+              </p>
+
+              <h2 className="mt-2 text-3xl font-black tracking-tight">
+                Sign in to continue.
+              </h2>
+
+              <p className="mt-2 text-xs leading-5 text-slate-600">
+                Enter your account details to access your travel
+                dashboard.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+
+              {/* EMAIL */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                >
+                  Email Address
+                </label>
+
+                <div
+                  className={`flex items-center rounded-xl border bg-[#111113] px-4 transition focus-within:border-blue-500/50 ${
+                    errors.email
+                      ? "border-red-500/50"
+                      : "border-white/10"
+                  }`}
+                >
+                  <Mail size={16} className="text-blue-400" />
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    className={inputClass}
+                  />
+                </div>
+
+                {errors.email && (
+                  <p className="mt-1.5 text-[10px] font-semibold text-red-400">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              {/* PASSWORD */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                >
+                  Password
+                </label>
+
+                <div
+                  className={`flex items-center rounded-xl border bg-[#111113] px-4 transition focus-within:border-blue-500/50 ${
+                    errors.password
+                      ? "border-red-500/50"
+                      : "border-white/10"
+                  }`}
+                >
+                  <LockKeyhole size={16} className="text-blue-400" />
+
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    className={inputClass}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowPassword((prev) => !prev)
+                    }
+                    className="text-slate-600 transition hover:text-white"
+                    aria-label={
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff size={16} />
+                    ) : (
+                      <Eye size={16} />
+                    )}
+                  </button>
+                </div>
+
+                {errors.password && (
+                  <p className="mt-1.5 text-[10px] font-semibold text-red-400">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              {/* MESSAGE */}
+              {message && !showSuccessPopup && (
+                <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-[10px] font-semibold text-red-400">
+                  {message}
+                </div>
+              )}
+
+              {/* BUTTON */}
+              <button
+                type="submit"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
+              >
+                Sign In
+
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </button>
+            </form>
+
+            {/* REGISTER */}
+            <div className="mt-6 border-t border-white/10 pt-5 text-center">
+              <p className="text-[10px] text-slate-600">
+                Don't have an account?
+              </p>
+
+              <Link
+                to="/register"
+                className="mt-1 inline-block text-xs font-bold text-blue-400 transition hover:text-blue-300"
+              >
+                Create a new account
+              </Link>
+            </div>
+
+            {/* FRONTEND STATUS */}
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+
+              <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-slate-700">
+                Frontend Authentication Interface
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-    </Layout>
-  );
+
+      {/* SUCCESS POPUP */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-blue-500/20 bg-[#0d0d10] p-8 text-center shadow-2xl shadow-blue-950/40">
+
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10">
+              <CheckCircle2
+                size={46}
+                className="text-blue-400"
+                strokeWidth={1.8}
+              />
+            </div>
+
+            <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.25em] text-blue-400">
+              Authentication
+            </p>
+
+            <h3 className="mt-2 text-2xl font-black text-white">
+              Login Successful!
+            </h3>
+
+            <p className="mt-3 text-sm leading-6 text-slate-500">
+              Welcome back. Redirecting you to your travel dashboard...
+            </p>
+
+            <div className="mx-auto mt-6 h-1 w-32 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full w-full origin-left animate-pulse rounded-full bg-blue-500" />
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
 }
 
-export default Login;
+export default Login

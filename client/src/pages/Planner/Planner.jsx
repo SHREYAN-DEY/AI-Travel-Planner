@@ -1,784 +1,838 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Layout from "../../components/layout/Layout";
-import {
-  MapPinned,
-  Route,
-  MapPin,
-  Loader2,
-  CheckCircle2,
-} from "lucide-react";
-
-import DestinationInput from "../../components/planner/DestinationInput";
-import DateSelector from "../../components/planner/DateSelector";
-import TripDetails from "../../components/planner/TripDetails";
-import TravelStyleSelector from "../../components/planner/TravelStyleSelector";
-import BudgetSelector from "../../components/planner/BudgetSelector";
-import InterestSelector from "../../components/planner/InterestSelector";
-
-function Planner() {
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    destination: "",
-    startDate: "",
-    endDate: "",
-    duration: "",
-    numTravelers: "",
-    travelStyle: "",
-    interests: [],
-    budgetMin: "",
-    budgetMax: "",
-  });
-
-  //  DATE DURATION 
-
-  const calculateDuration = (startDate, endDate) => {
-    if (!startDate || !endDate) return "";
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    if (
-      Number.isNaN(start.getTime()) ||
-      Number.isNaN(end.getTime())
-    ) {
-      return "";
-    }
-
-    if (end < start) return "";
-
-    const difference =
-      Math.ceil(
-        (end.getTime() - start.getTime()) /
-          (1000 * 60 * 60 * 24)
-      ) + 1;
-
-    return difference;
-  };
-
-  //  FORM CHANGE 
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => {
-      const updatedData = {
-        ...prev,
-        [name]: value,
-      };
-
-      // Automatically calculate total trip duration
-      // from start date and end date.
-      if (name === "startDate" || name === "endDate") {
-        const startDate =
-          name === "startDate"
-            ? value
-            : prev.startDate;
-
-        const endDate =
-          name === "endDate"
-            ? value
-            : prev.endDate;
-
-        updatedData.duration = calculateDuration(
-          startDate,
-          endDate
-        );
-      }
-
-      return updatedData;
-    });
-  };
-
-  //  INTEREST CHANGE 
-
-  const handleInterestChange = (interest) => {
-    setFormData((prev) => ({
-      ...prev,
-
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter(
-            (item) => item !== interest
-          )
-        : [...prev.interests, interest],
-    }));
-  };
-
-  //  GENERATE LOCAL ITINERARY  
-
-  const generateLocalItinerary = () => {
-    const destination = formData.destination.trim();
-
-    const interests = formData.interests.map((item) =>
-      String(item).toLowerCase()
-    );
-
-    const duration = Math.max(
-      1,
-      Math.min(Number(formData.duration) || 1, 30)
-    );
-
-    const hasFood = interests.some((item) =>
-      item.includes("food")
-    );
-
-    const hasNature = interests.some((item) =>
-      item.includes("nature")
-    );
-
-    const hasBeach = interests.some((item) =>
-      item.includes("beach")
-    );
-
-    const hasCulture =
-      interests.some((item) =>
-        item.includes("culture")
-      ) ||
-      interests.some((item) =>
-        item.includes("history")
-      );
-
-    const hasAdventure = interests.some((item) =>
-      item.includes("adventure")
-    );
-
-    const hasShopping = interests.some((item) =>
-      item.includes("shopping")
-    );
-
-    const itinerary = Array.from(
-      { length: duration },
-      (_, index) => {
-        const dayNumber = index + 1;
-
-        //  MORNING 
-
-        let morningTitle = `Explore ${destination}`;
-
-        let morningDescription = `Start your day by exploring popular attractions and discovering the highlights of ${destination}.`;
-
-        if (hasNature && dayNumber % 2 === 0) {
-          morningTitle = "Nature & Scenic Exploration";
-
-          morningDescription = `Visit beautiful natural surroundings around ${destination} and enjoy a peaceful outdoor experience.`;
-        }
-
-        if (hasBeach && dayNumber % 2 === 0) {
-          morningTitle = "Beach & Coastal Exploration";
-
-          morningDescription = `Enjoy the coastline, relax by the water and explore scenic coastal locations around ${destination}.`;
-        }
-
-        if (hasAdventure && dayNumber % 2 === 1) {
-          morningTitle = "Adventure Experience";
-
-          morningDescription = `Start the day with an exciting adventure activity and discover ${destination} from a different perspective.`;
-        }
-
-        //  AFTERNOON 
-
-        let afternoonTitle = "Local Food Experience";
-
-        let afternoonDescription = `Enjoy local cuisine and experience the atmosphere of ${destination}.`;
-
-        if (hasFood) {
-          afternoonTitle = "Local Food Experience";
-
-          afternoonDescription = `Try popular local dishes and explore food spots while experiencing the flavours of ${destination}.`;
-        }
-
-        if (hasCulture && dayNumber % 2 === 0) {
-          afternoonTitle = "Culture & Heritage";
-
-          afternoonDescription = `Discover the history, traditions and cultural attractions of ${destination}.`;
-        }
-
-        if (hasShopping && dayNumber % 3 === 0) {
-          afternoonTitle = "Shopping & Local Markets";
-
-          afternoonDescription = `Explore popular markets and shopping areas in ${destination} and discover local products and souvenirs.`;
-        }
-
-        //  EVENING 
-
-        let eveningTitle = "Sightseeing & Photography";
-
-        let eveningDescription = `Spend the evening exploring scenic locations, enjoying the surroundings and capturing memorable moments.`;
-
-        if (hasBeach) {
-          eveningTitle = "Sunset & Relaxation";
-
-          eveningDescription = `Enjoy a relaxing evening and watch the sunset while taking in the beautiful surroundings of ${destination}.`;
-        }
-
-        if (hasFood && dayNumber % 2 === 0) {
-          eveningTitle = "Dinner & Local Experience";
-
-          eveningDescription = `Enjoy a memorable dinner and experience the local atmosphere of ${destination}.`;
-        }
-
-        if (hasAdventure && dayNumber % 3 === 0) {
-          eveningTitle = "Evening Adventure";
-
-          eveningDescription = `Enjoy an exciting evening activity and make the most of your adventure in ${destination}.`;
-        }
-
-        return {
-          day: dayNumber,
-
-          morning: {
-            time: "09:00 AM",
-            title: morningTitle,
-            description: morningDescription,
-          },
-
-          afternoon: {
-            time: "01:00 PM",
-            title: afternoonTitle,
-            description: afternoonDescription,
-          },
-
-          evening: {
-            time: "05:00 PM",
-            title: eveningTitle,
-            description: eveningDescription,
-          },
-        };
-      }
-    );
-
-    return itinerary;
-  };
-
-  //  GET SAVED TRIPS SAFELY 
-
-  const getSavedTrips = () => {
-    try {
-      const savedTrips = JSON.parse(
-        localStorage.getItem("savedTrips") || "[]"
-      );
-
-      return Array.isArray(savedTrips)
-        ? savedTrips
-        : [];
-    } catch (error) {
-      console.error(
-        "Unable to read saved trips:",
-        error
-      );
-
-      return [];
-    }
-  };
-
-  //  SUBMIT 
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (loading) return;
-
-    //  REQUIRED FIELD VALIDATION 
-
-    if (!formData.destination.trim()) {
-      alert("Please enter your destination.");
-      return;
-    }
-
-    if (!formData.startDate) {
-      alert("Please select your start date.");
-      return;
-    }
-
-    if (!formData.endDate) {
-      alert("Please select your end date.");
-      return;
-    }
-
-    if (!formData.numTravelers) {
-      alert("Please enter the number of travelers.");
-      return;
-    }
-
-    if (!formData.travelStyle) {
-      alert("Please select your travel style.");
-      return;
-    }
-
-    if (!formData.budgetMin || !formData.budgetMax) {
-      alert("Please select your budget range.");
-      return;
-    }
-
-    if (formData.interests.length === 0) {
-      alert("Please select at least one interest.");
-      return;
-    }
-
-    //  DATE VALIDATION 
-
-    const startDate = new Date(formData.startDate);
-    const endDate = new Date(formData.endDate);
-
-    if (
-      Number.isNaN(startDate.getTime()) ||
-      Number.isNaN(endDate.getTime())
-    ) {
-      alert("Please select valid travel dates.");
-      return;
-    }
-
-    if (endDate < startDate) {
-      alert("End date cannot be before start date.");
-      return;
-    }
-
-
-    //  CALCULATE FINAL DURATION 
-
-    const calculatedDuration = calculateDuration(
-      formData.startDate,
-      formData.endDate
-    );
-
-    if (!calculatedDuration) {
-      alert("Please select valid travel dates.");
-      return;
-    }
-
-    //  BUDGET VALIDATION 
-
-    const minBudget = Number(formData.budgetMin);
-    const maxBudget = Number(formData.budgetMax);
-
-    if (
-      !Number.isNaN(minBudget) &&
-      !Number.isNaN(maxBudget) &&
-      minBudget > maxBudget
-    ) {
-      alert(
-        "Minimum budget cannot be greater than maximum budget."
-      );
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Small delay for a smoother AI-generation experience
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
-      );
-
-      // Make sure itinerary always uses the
-      // automatically calculated duration.
-
-      const finalFormData = {
-        ...formData,
-        duration: calculatedDuration,
-      };
-
-      const itinerary = generateLocalItineraryWithDuration(
-        finalFormData
-      );
-
-      const trip = {
-        id: Date.now(),
-
-        destination: formData.destination.trim(),
-
-        startDate: formData.startDate,
-
-        endDate: formData.endDate,
-
-        duration: calculatedDuration,
-
-        numTravelers: formData.numTravelers,
-
-        travelStyle: formData.travelStyle,
-
-        interests: [...formData.interests],
-
-        budgetMin: formData.budgetMin,
-
-        budgetMax: formData.budgetMax,
-
-        itinerary,
-
-        createdAt: new Date().toISOString(),
-      };
-
-      //  SAVE TRIP LOCALLY 
-
-      const existingTrips = getSavedTrips();
-
-      const updatedTrips = [
-        trip,
-        ...existingTrips,
-      ];
-
-      localStorage.setItem(
-        "savedTrips",
-        JSON.stringify(updatedTrips)
-      );
-
-      //  OPEN ITINERARY 
-
-      navigate("/itinerary", {
-        state: trip,
-      });
-
-    } catch (error) {
-      console.error(
-        "Trip generation error:",
-        error
-      );
-
-      alert(
-        "Unable to create your trip. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  //  GENERATE ITINERARY WITH FINAL DURATION 
-
-  const generateLocalItineraryWithDuration = (
-    currentFormData
-  ) => {
-    const destination =
-      currentFormData.destination.trim();
-
-    const interests = currentFormData.interests.map(
-      (item) => String(item).toLowerCase()
-    );
-
-    const duration = Math.max(
-      1,
-      Math.min(
-        Number(currentFormData.duration) || 1,
-        30
-      )
-    );
-
-    const hasFood = interests.some((item) =>
-      item.includes("food")
-    );
-
-    const hasNature = interests.some((item) =>
-      item.includes("nature")
-    );
-
-    const hasBeach = interests.some((item) =>
-      item.includes("beach")
-    );
-
-    const hasCulture =
-      interests.some((item) =>
-        item.includes("culture")
-      ) ||
-      interests.some((item) =>
-        item.includes("history")
-      );
-
-    const hasAdventure = interests.some((item) =>
-      item.includes("adventure")
-    );
-
-    const hasShopping = interests.some((item) =>
-      item.includes("shopping")
-    );
-
-    const itinerary = Array.from(
-      { length: duration },
-      (_, index) => {
-        const dayNumber = index + 1;
-
-        //  MORNING 
-
-        let morningTitle = `Explore ${destination}`;
-
-        let morningDescription = `Start your day by exploring popular attractions and discovering the highlights of ${destination}.`;
-
-        if (hasNature && dayNumber % 2 === 0) {
-          morningTitle = "Nature & Scenic Exploration";
-
-          morningDescription = `Visit beautiful natural surroundings around ${destination} and enjoy a peaceful outdoor experience.`;
-        }
-
-        if (hasBeach && dayNumber % 2 === 0) {
-          morningTitle = "Beach & Coastal Exploration";
-
-          morningDescription = `Enjoy the coastline, relax by the water and explore scenic coastal locations around ${destination}.`;
-        }
-
-        if (hasAdventure && dayNumber % 2 === 1) {
-          morningTitle = "Adventure Experience";
-
-          morningDescription = `Start the day with an exciting adventure activity and discover ${destination} from a different perspective.`;
-        }
-
-        //  AFTERNOON 
-
-        let afternoonTitle = "Local Food Experience";
-
-        let afternoonDescription = `Enjoy local cuisine and experience the atmosphere of ${destination}.`;
-
-        if (hasFood) {
-          afternoonTitle = "Local Food Experience";
-
-          afternoonDescription = `Try popular local dishes and explore food spots while experiencing the flavours of ${destination}.`;
-        }
-
-        if (hasCulture && dayNumber % 2 === 0) {
-          afternoonTitle = "Culture & Heritage";
-
-          afternoonDescription = `Discover the history, traditions and cultural attractions of ${destination}.`;
-        }
-
-        if (hasShopping && dayNumber % 3 === 0) {
-          afternoonTitle = "Shopping & Local Markets";
-
-          afternoonDescription = `Explore popular markets and shopping areas in ${destination} and discover local products and souvenirs.`;
-        }
-
-        //  EVENING 
-
-        let eveningTitle = "Sightseeing & Photography";
-
-        let eveningDescription = `Spend the evening exploring scenic locations, enjoying the surroundings and capturing memorable moments.`;
-
-        if (hasBeach) {
-          eveningTitle = "Sunset & Relaxation";
-
-          eveningDescription = `Enjoy a relaxing evening and watch the sunset while taking in the beautiful surroundings of ${destination}.`;
-        }
-
-        if (hasFood && dayNumber % 2 === 0) {
-          eveningTitle = "Dinner & Local Experience";
-
-          eveningDescription = `Enjoy a memorable dinner and experience the local atmosphere of ${destination}.`;
-        }
-
-        if (hasAdventure && dayNumber % 3 === 0) {
-          eveningTitle = "Evening Adventure";
-
-          eveningDescription = `Enjoy an exciting evening activity and make the most of your adventure in ${destination}.`;
-        }
-
-        return {
-          day: dayNumber,
-
-          morning: {
-            time: "09:00 AM",
-            title: morningTitle,
-            description: morningDescription,
-          },
-
-          afternoon: {
-            time: "01:00 PM",
-            title: afternoonTitle,
-            description: afternoonDescription,
-          },
-
-          evening: {
-            time: "05:00 PM",
-            title: eveningTitle,
-            description: eveningDescription,
-          },
-        };
-      }
-    );
-
-    return itinerary;
-  };
-
-  //  UI 
-
-  return (
-    <Layout>
-      <div className="min-h-screen w-full overflow-x-hidden bg-gray-50">
-
-        <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-
-          {/*  HEADER  */}
-
-          <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
-
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200">
-              <MapPinned size={27} />
-            </div>
-
-            <h1 className="break-words text-3xl font-extrabold tracking-tight text-gray-950 sm:text-4xl md:text-5xl">
-              Plan Your Perfect Trip
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-2xl break-words text-sm leading-6 text-gray-600 sm:text-base sm:leading-7">
-              Tell us about your destination, budget and interests.
-              We'll create a personalized itinerary for you.
-            </p>
-
-            {/* Small info badge */}
-
-            <div className="mt-5 inline-flex max-w-full items-center gap-2 rounded-full border border-indigo-100 bg-white px-4 py-2 text-xs font-medium text-indigo-600 shadow-sm">
-
-              <MapPin
-                size={14}
-                className="shrink-0"
-              />
-
-              <span className="truncate">
-                Smart AI Travel Planner
-              </span>
-
-            </div>
-
-          </div>
-
-         {/*  FORM CARD  */}
-
-          <div className="w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:rounded-3xl sm:p-8 md:p-10">
-
-            <form
-              onSubmit={handleSubmit}
-              className="w-full space-y-8"
-            >
-
-              {/* Destination */}
-
-              <DestinationInput
-                value={formData.destination}
-                onChange={handleChange}
-              />
-
-              {/* Dates */}
-
-              <DateSelector
-                startDate={formData.startDate}
-                endDate={formData.endDate}
-                onChange={handleChange}
-              />
-
-              {/* Trip Details */}
-
-              <TripDetails
-                duration={formData.duration}
-                numTravelers={formData.numTravelers}
-                onChange={handleChange}
-              />
-
-              {/* Travel Style */}
-
-              <TravelStyleSelector
-                value={formData.travelStyle}
-                onChange={handleChange}
-              />
-
-              {/* Budget */}
-
-              <BudgetSelector
-                budgetMin={formData.budgetMin}
-                budgetMax={formData.budgetMax}
-                onChange={handleChange}
-              />
-
-              {/* Interests */}
-
-              <InterestSelector
-                selectedInterests={formData.interests}
-                onChange={handleInterestChange}
-              />
-
-              {/*  GENERATE BUTTON  */}
-
-              <div className="border-t border-gray-100 pt-6">
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-4 text-sm font-bold !text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-indigo-600"
-                >
-
-                  {loading ? (
-                    <>
-                      <Loader2
-                        size={20}
-                        className="shrink-0 animate-spin !text-white"
-                      />
-
-                      <span className="!text-white">
-                        Creating Your Itinerary...
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <Route
-                        size={20}
-                        className="shrink-0 !text-white"
-                      />
-
-                      <span className="!text-white">
-                        Generate My Trip
-                      </span>
-                    </>
-                  )}
-
-                </button>
-
-                {/* Helper text */}
-
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-500">
-
-                  <span className="inline-flex items-center gap-1.5">
-
-                    <CheckCircle2
-                      size={14}
-                      className="text-indigo-600"
-                    />
-
-                    Personalized itinerary
-
-                  </span>
-
-                  <span className="inline-flex items-center gap-1.5">
-
-                    <CheckCircle2
-                      size={14}
-                      className="text-indigo-600"
-                    />
-
-                    Saved automatically
-
-                  </span>
-
-                  <span className="inline-flex items-center gap-1.5">
-
-                    <CheckCircle2
-                      size={14}
-                      className="text-indigo-600"
-                    />
-
-                    No backend required
-
-                  </span>
-
-                </div>
-
-              </div>
-
-            </form>
-
-          </div>
-
-        </main>
-
-      </div>
-    </Layout>
-  );
-}
-
-export default Planner;
+import { useState } from "react" 
+import { useLocation, useNavigate } from "react-router-dom" 
+import { 
+  ArrowRight, 
+  CalendarDays, 
+  Minus, 
+  Plus, 
+ Route, 
+  Users, 
+} from "lucide-react" 
+ 
+import DestinationInput from "../../components/planner/DestinationInput" 
+import BudgetSlider from "../../components/planner/BudgetSlider" 
+import InterestSelector from "../../components/planner/InterestSelector" 
+ 
+const MIN_BUDGET = 1000 
+const MAX_BUDGET = 100000 
+const BUDGET_STEP = 500 
+ 
+const interests = [ 
+  "Food", 
+  "Culture", 
+  "Beaches", 
+  "Nature", 
+  "Shopping", 
+  "Entertainment", 
+  "Photography", 
+  "Adventure", 
+] 
+ 
+function Planner() { 
+  const location = useLocation() 
+  const navigate = useNavigate() 
+ 
+  /* ---------------- INITIAL FORM DATA ---------------- */ 
+ 
+  const [formData, setFormData] = useState(() => { 
+    const previousTrip = location.state 
+ 
+    if (previousTrip) { 
+      return { 
+        destination: previousTrip.destination || "", 
+        startDate: previousTrip.startDate || "", 
+        endDate: previousTrip.endDate || "", 
+        duration: previousTrip.duration || "", 
+        numTravelers: previousTrip.numTravelers || 1, 
+        interests: Array.isArray(previousTrip.interests) 
+          ? previousTrip.interests 
+          : [], 
+        budgetMin: previousTrip.budgetMin ?? "", 
+        budgetMax: previousTrip.budgetMax ?? "", 
+      } 
+    } 
+ 
+    return { 
+      destination: "", 
+      startDate: "", 
+      endDate: "", 
+      duration: "", 
+      numTravelers: 1, 
+      interests: [], 
+      budgetMin: "", 
+      budgetMax: "", 
+    } 
+  }) 
+ 
+  const [errors, setErrors] = useState({}) 
+ 
+  /* ---------------- DATE / DURATION ---------------- */ 
+ 
+  const calculateDuration = (startDate, endDate) => { 
+    if (!startDate || !endDate) return "" 
+ 
+    const start = new Date(`${startDate}T00:00:00`) 
+    const end = new Date(`${endDate}T00:00:00`) 
+ 
+    const difference = 
+      Math.ceil( 
+        (end.getTime() - start.getTime()) / 
+          (1000 * 60 * 60 * 24) 
+      ) + 1 
+ 
+    return difference > 0 ? difference : "" 
+  } 
+ 
+  const handleDateChange = (field, value) => { 
+    const updated = { 
+      ...formData, 
+      [field]: value, 
+    } 
+ 
+    const duration = calculateDuration( 
+      updated.startDate, 
+      updated.endDate 
+    ) 
+ 
+    setFormData({ 
+      ...updated, 
+      duration, 
+    }) 
+ 
+    setErrors((prev) => ({ 
+      ...prev, 
+      startDate: "", 
+      endDate: "", 
+    })) 
+  } 
+ 
+  /* ---------------- TRAVELERS ---------------- */ 
+ 
+  const increaseTravelers = () => { 
+    setFormData((prev) => ({ 
+      ...prev, 
+      numTravelers: Math.min( 
+        Number(prev.numTravelers) + 1, 
+        20 
+      ), 
+    })) 
+ 
+    setErrors((prev) => ({ 
+      ...prev, 
+      travelers: "", 
+    })) 
+  } 
+ 
+  const decreaseTravelers = () => { 
+    setFormData((prev) => ({ 
+      ...prev, 
+      numTravelers: Math.max( 
+        Number(prev.numTravelers) - 1, 
+        1 
+      ), 
+    })) 
+ 
+    setErrors((prev) => ({ 
+      ...prev, 
+      travelers: "", 
+    })) 
+  } 
+ 
+  /* ---------------- BUDGET SLIDER ---------------- */ 
+ 
+  const handleBudgetSliderChange = (type, value) => { 
+    const numberValue = Number(value) 
+ 
+    if (Number.isNaN(numberValue)) return 
+ 
+    if (type === "min") { 
+      const currentMax = 
+        formData.budgetMax === "" 
+          ? MAX_BUDGET 
+          : Number(formData.budgetMax) 
+ 
+      const safeValue = Math.min( 
+        Math.max(numberValue, MIN_BUDGET), 
+        currentMax - BUDGET_STEP 
+      ) 
+ 
+      setFormData((prev) => ({ 
+        ...prev, 
+        budgetMin: safeValue, 
+      })) 
+    } 
+ 
+    if (type === "max") { 
+      const currentMin = 
+        formData.budgetMin === "" 
+          ? MIN_BUDGET 
+          : Number(formData.budgetMin) 
+ 
+      const safeValue = Math.max( 
+        Math.min(numberValue, MAX_BUDGET), 
+        currentMin + BUDGET_STEP 
+      ) 
+ 
+      setFormData((prev) => ({ 
+        ...prev, 
+        budgetMax: safeValue, 
+      })) 
+    } 
+ 
+    setErrors((prev) => ({ 
+      ...prev, 
+      budget: "", 
+    })) 
+  } 
+ 
+  /* ---------------- BUDGET MANUAL INPUT ---------------- */ 
+ 
+  const handleBudgetInputChange = (type, value) => { 
+    const field = 
+      type === "min" ? "budgetMin" : "budgetMax" 
+ 
+    if (value === "") { 
+      setFormData((prev) => ({ 
+        ...prev, 
+        [field]: "", 
+      })) 
+ 
+      setErrors((prev) => ({ 
+        ...prev, 
+        budget: "", 
+      })) 
+ 
+      return 
+    } 
+ 
+    const numberValue = Number(value) 
+ 
+    if (Number.isNaN(numberValue)) return 
+ 
+    if (type === "min") { 
+      const currentMax = 
+        formData.budgetMax === "" 
+          ? MAX_BUDGET 
+          : Number(formData.budgetMax) 
+ 
+      const safeValue = Math.min( 
+        Math.max(numberValue, MIN_BUDGET), 
+        currentMax - BUDGET_STEP 
+      ) 
+ 
+      setFormData((prev) => ({ 
+        ...prev, 
+        budgetMin: safeValue, 
+      })) 
+    } 
+ 
+    if (type === "max") { 
+      const currentMin = 
+        formData.budgetMin === "" 
+          ? MIN_BUDGET 
+          : Number(formData.budgetMin) 
+ 
+      const safeValue = Math.max( 
+        Math.min(numberValue, MAX_BUDGET), 
+        currentMin + BUDGET_STEP 
+      ) 
+ 
+      setFormData((prev) => ({ 
+        ...prev, 
+        budgetMax: safeValue, 
+      })) 
+    } 
+ 
+    setErrors((prev) => ({ 
+      ...prev, 
+      budget: "", 
+    })) 
+  } 
+ 
+  /* ---------------- INTERESTS ---------------- */ 
+ 
+  const toggleInterest = (interest) => { 
+    setFormData((prev) => { 
+      const exists = prev.interests.includes(interest) 
+ 
+      return { 
+        ...prev, 
+        interests: exists 
+          ? prev.interests.filter( 
+              (item) => item !== interest 
+            ) 
+          : [...prev.interests, interest], 
+      } 
+    }) 
+  } 
+ 
+  /* ---------------- VALIDATION ---------------- */ 
+ 
+  const validateForm = () => { 
+    const newErrors = {} 
+ 
+    // Destination 
+    if (!formData.destination.trim()) { 
+      newErrors.destination = 
+        "Enter your destination" 
+    } 
+ 
+    // Start Date 
+    if (!formData.startDate) { 
+      newErrors.startDate = 
+        "Select start date" 
+    } 
+ 
+    // End Date 
+    if (!formData.endDate) { 
+      newErrors.endDate = 
+        "Select end date" 
+    } 
+ 
+    // Date relationship 
+    if ( 
+      formData.startDate && 
+      formData.endDate 
+    ) { 
+      const start = new Date( 
+        `${formData.startDate}T00:00:00` 
+      ) 
+ 
+      const end = new Date( 
+        `${formData.endDate}T00:00:00` 
+      ) 
+ 
+      if (end < start) { 
+        newErrors.endDate = 
+          "End date must be after start date" 
+      } 
+    } 
+ 
+    // Duration 
+    if ( 
+      formData.startDate && 
+      formData.endDate && 
+      !formData.duration 
+    ) { 
+      newErrors.endDate = 
+        "Select a valid travel date range" 
+    } 
+ 
+    // Travelers 
+    if ( 
+      !formData.numTravelers || 
+      Number(formData.numTravelers) < 1 
+    ) { 
+      newErrors.travelers = 
+        "At least 1 traveler is required" 
+    } 
+ 
+    if ( 
+      Number(formData.numTravelers) > 20 
+    ) { 
+      newErrors.travelers = 
+        "Maximum 20 travelers allowed" 
+    } 
+ 
+    // Budget 
+    if ( 
+      formData.budgetMin === "" || 
+      formData.budgetMax === "" 
+    ) { 
+      newErrors.budget = 
+        "Set your budget range" 
+    } 
+ 
+    if ( 
+      formData.budgetMin !== "" && 
+      formData.budgetMax !== "" && 
+      Number(formData.budgetMin) >= 
+        Number(formData.budgetMax) 
+    ) { 
+      newErrors.budget = 
+        "Maximum budget must be higher than minimum" 
+    } 
+ 
+    // Minimum budget boundary 
+    if ( 
+      formData.budgetMin !== "" && 
+      Number(formData.budgetMin) < 
+        MIN_BUDGET 
+    ) { 
+      newErrors.budget = 
+        `Minimum budget is ₹${MIN_BUDGET.toLocaleString( 
+          "en-IN" 
+        )}` 
+    } 
+ 
+    // Maximum budget boundary 
+    if ( 
+      formData.budgetMax !== "" && 
+      Number(formData.budgetMax) > 
+        MAX_BUDGET 
+    ) { 
+      newErrors.budget = 
+        `Maximum budget cannot exceed ₹${MAX_BUDGET.toLocaleString( 
+          "en-IN" 
+        )}` 
+    } 
+ 
+    setErrors(newErrors) 
+ 
+    return Object.keys(newErrors).length === 0 
+  } 
+ 
+  /* ---------------- SUBMIT ---------------- */ 
+ 
+  const handleSubmit = (event) => { 
+    event.preventDefault() 
+ 
+    const isValid = validateForm() 
+ 
+    if (!isValid) { 
+      return 
+    } 
+ 
+    const tripData = { 
+      destination: formData.destination.trim(), 
+      startDate: formData.startDate, 
+      endDate: formData.endDate, 
+      duration: Number(formData.duration), 
+      numTravelers: Number( 
+        formData.numTravelers 
+      ), 
+      interests: [...formData.interests], 
+      budgetMin: Number(formData.budgetMin), 
+      budgetMax: Number(formData.budgetMax), 
+    } 
+ 
+    navigate("/itinerary", { 
+      state: tripData, 
+    }) 
+  } 
+ 
+  /* ---------------- TODAY ---------------- */ 
+ 
+  const today = new Date() 
+  const todayString = 
+    `${today.getFullYear()}-${String( 
+      today.getMonth() + 1 
+    ).padStart(2, "0")}-${String( 
+      today.getDate() 
+    ).padStart(2, "0")}` 
+ 
+  /* ---------------- UI ---------------- */ 
+ 
+  return ( 
+    <section className="min-h-[calc(100vh-6rem)] bg-[#050505] px-4 pb-12 pt-4 text-white sm:px-6 lg:px-8"> 
+      <div className="mx-auto max-w-7xl"> 
+ 
+        {/* HEADER */} 
+ 
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"> 
+          <div> 
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400"> 
+              <Route size={13} /> 
+              Travel Configuration 
+            </div> 
+ 
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl"> 
+              BUILD YOUR 
+              <span className="text-blue-500"> 
+                {" "}JOURNEY. 
+              </span> 
+            </h1> 
+ 
+            <p className="mt-2 max-w-xl text-xs leading-5 text-slate-500 sm:text-sm"> 
+              Configure your destination, dates, 
+              travelers, budget and interests to 
+              prepare your personalized travel plan. 
+            </p> 
+          </div> 
+ 
+          <div className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 lg:flex"> 
+            <span className="h-2 w-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/60" /> 
+ 
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"> 
+              Planner Ready 
+            </span> 
+          </div> 
+        </div> 
+ 
+        {/* MAIN FORM */} 
+ 
+        <form onSubmit={handleSubmit}> 
+          <div className="grid gap-4 lg:grid-cols-[1.25fr_0.75fr]"> 
+ 
+            {/* LEFT SIDE */} 
+ 
+            <div className="space-y-4"> 
+ 
+              {/* DESTINATION */} 
+ 
+              <DestinationInput 
+                value={formData.destination} 
+                onChange={(e) => { 
+                  setFormData((prev) => ({ 
+                    ...prev, 
+                    destination: 
+                      e.target.value, 
+                  })) 
+ 
+                  setErrors((prev) => ({ 
+                    ...prev, 
+                    destination: "", 
+                  })) 
+                }} 
+                error={errors.destination} 
+              /> 
+ 
+              {/* DATES */} 
+ 
+              <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-5"> 
+                <div className="mb-4 flex items-center justify-between"> 
+                  <div> 
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400"> 
+                      02 / Schedule 
+                    </p> 
+ 
+                    <h2 className="mt-1 text-lg font-black"> 
+                      When are you travelling? 
+                    </h2> 
+                  </div> 
+ 
+                  {formData.duration && ( 
+                    <div className="rounded-xl bg-blue-600/10 px-3 py-2 text-right"> 
+                      <p className="text-[9px] uppercase tracking-wider text-blue-400"> 
+                        Duration 
+                      </p> 
+ 
+                      <p className="text-sm font-black text-white"> 
+                        {formData.duration}{" "} 
+                        {formData.duration === 1 
+                          ? "Day" 
+                          : "Days"} 
+                      </p> 
+                    </div> 
+                  )} 
+                </div> 
+ 
+                <div className="grid gap-3 sm:grid-cols-2"> 
+ 
+                  {/* START DATE */} 
+ 
+                  <div> 
+                    <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500"> 
+                      Start Date 
+                    </label> 
+ 
+                    <div className="relative"> 
+                      <CalendarDays 
+                        size={16} 
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400" 
+                      /> 
+ 
+                      <input 
+                        type="date" 
+                        min={todayString} 
+                        value={formData.startDate} 
+                        onChange={(e) => 
+                          handleDateChange( 
+                            "startDate", 
+                            e.target.value 
+                          ) 
+                        } 
+                        className={`w-full rounded-xl border bg-[#111113] px-4 py-3 pl-11 text-sm font-semibold text-white outline-none transition [color-scheme:dark] focus:border-blue-500/50 ${ 
+                          errors.startDate 
+                            ? "border-red-500/50" 
+                            : "border-white/10" 
+                        }`} 
+                      /> 
+                    </div> 
+ 
+                    {errors.startDate && ( 
+                      <p className="mt-2 text-[10px] text-red-400"> 
+                        {errors.startDate} 
+                      </p> 
+                    )} 
+                  </div> 
+ 
+                  {/* END DATE */} 
+ 
+                  <div> 
+                    <label className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-slate-500"> 
+                      End Date 
+                    </label> 
+ 
+                    <div className="relative"> 
+                      <CalendarDays 
+                        size={16} 
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400" 
+                      /> 
+ 
+                      <input 
+                        type="date" 
+                        min={ 
+                          formData.startDate || 
+                          todayString 
+                        } 
+                        value={formData.endDate} 
+                        onChange={(e) => 
+                          handleDateChange( 
+                            "endDate", 
+                            e.target.value 
+                          ) 
+                        } 
+                        className={`w-full rounded-xl border bg-[#111113] px-4 py-3 pl-11 text-sm font-semibold text-white outline-none transition [color-scheme:dark] focus:border-blue-500/50 ${ 
+                          errors.endDate 
+                            ? "border-red-500/50" 
+                            : "border-white/10" 
+                        }`} 
+                      /> 
+                    </div> 
+ 
+                    {errors.endDate && ( 
+                      <p className="mt-2 text-[10px] text-red-400"> 
+                        {errors.endDate} 
+                      </p> 
+                    )} 
+                  </div> 
+                </div> 
+ 
+                <div className="mt-3 rounded-xl border border-blue-500/10 bg-blue-500/[0.04] px-4 py-3"> 
+                  <div className="flex items-center justify-between"> 
+                    <span className="text-[10px] uppercase tracking-wider text-slate-600"> 
+                      Automatic Duration 
+                    </span> 
+ 
+                    <span className="text-xs font-bold text-blue-400"> 
+                      {formData.duration 
+                        ? `${formData.duration} days` 
+                        : "Select dates"} 
+                    </span> 
+                  </div> 
+                </div> 
+              </div> 
+ 
+              {/* BUDGET */} 
+ 
+              <BudgetSlider 
+                budgetMin={formData.budgetMin} 
+                budgetMax={formData.budgetMax} 
+                onMinChange={(value) => { 
+                  if (typeof value === "string") { 
+                    handleBudgetInputChange( 
+                      "min", 
+                      value 
+                    ) 
+                  } else { 
+                    handleBudgetSliderChange( 
+                      "min", 
+                      value 
+                    ) 
+                  } 
+                }} 
+                onMaxChange={(value) => { 
+                  if (typeof value === "string") { 
+                    handleBudgetInputChange( 
+                      "max", 
+                      value 
+                    ) 
+                  } else { 
+                    handleBudgetSliderChange( 
+                      "max", 
+                      value 
+                    ) 
+                  } 
+                }} 
+              /> 
+ 
+              {errors.budget && ( 
+                <p className="mt-2 text-[10px] font-semibold text-red-400"> 
+                  {errors.budget} 
+                </p> 
+              )} 
+            </div> 
+ 
+            {/* RIGHT SIDE */} 
+ 
+            <div className="space-y-4"> 
+ 
+              {/* TRAVELERS */} 
+ 
+              <div className="rounded-2xl border border-white/10 bg-[#0b0b0d] p-5"> 
+                <div className="mb-4 flex items-center justify-between"> 
+                  <div> 
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400"> 
+                      04 / Travelers 
+                    </p> 
+ 
+                    <h2 className="mt-1 text-lg font-black"> 
+                      Who is travelling? 
+                    </h2> 
+                  </div> 
+ 
+                  <Users 
+                    size={19} 
+                    className="text-blue-400" 
+                  /> 
+                </div> 
+ 
+                <div className="flex items-center justify-between rounded-xl border border-white/10 bg-[#111113] px-4 py-3"> 
+                  <div> 
+                    <p className="text-sm font-bold text-white"> 
+                      Travelers 
+                    </p> 
+ 
+                    <p className="mt-1 text-[10px] text-slate-600"> 
+                      Number of people 
+                    </p> 
+                  </div> 
+ 
+                  <div className="flex items-center gap-2"> 
+                    <button 
+                      type="button" 
+                      onClick={decreaseTravelers} 
+                      disabled={ 
+                        formData.numTravelers <= 1 
+                      } 
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-400 transition hover:bg-white/[0.08] hover:text-white disabled:cursor-not-allowed disabled:opacity-30" 
+                    > 
+                      <Minus size={14} /> 
+                    </button> 
+ 
+                    <span className="w-8 text-center text-sm font-black text-white"> 
+                      {formData.numTravelers} 
+                    </span> 
+ 
+                    <button 
+                      type="button" 
+                      onClick={increaseTravelers} 
+                      disabled={ 
+                        formData.numTravelers >= 20 
+                      } 
+                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-30" 
+                    > 
+                      <Plus size={14} /> 
+                    </button> 
+                  </div> 
+                </div> 
+ 
+                {errors.travelers && ( 
+                  <p className="mt-2 text-[10px] font-semibold text-red-400"> 
+                    {errors.travelers} 
+                  </p> 
+                )} 
+              </div> 
+ 
+              {/* INTERESTS */} 
+ 
+              <InterestSelector 
+                interests={interests} 
+                selectedInterests={formData.interests} 
+                onToggle={toggleInterest} 
+              /> 
+ 
+              {/* SUMMARY */} 
+ 
+              <div className="rounded-2xl border border-blue-500/20 bg-blue-600 p-5 shadow-xl shadow-blue-950/20"> 
+                <div className="flex items-start justify-between"> 
+                  <div> 
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-100"> 
+                      Mission Summary 
+                    </p> 
+ 
+                    <h2 className="mt-2 text-xl font-black"> 
+                      Ready to plan? 
+                    </h2> 
+                  </div> 
+ 
+                  <Route 
+                    size={22} 
+                    className="text-white/80" 
+                  /> 
+                </div> 
+ 
+                <div className="mt-5 grid grid-cols-2 gap-2"> 
+ 
+                  <div className="rounded-xl bg-black/15 p-3"> 
+                    <p className="text-[9px] uppercase tracking-wider text-blue-100/70"> 
+                      Destination 
+                    </p> 
+ 
+                    <p className="mt-1 truncate text-xs font-bold text-white"> 
+                      {formData.destination || 
+                        "Not set"} 
+                    </p> 
+                  </div> 
+ 
+                  <div className="rounded-xl bg-black/15 p-3"> 
+                    <p className="text-[9px] uppercase tracking-wider text-blue-100/70"> 
+                      Duration 
+                    </p> 
+ 
+                    <p className="mt-1 text-xs font-bold text-white"> 
+                      {formData.duration 
+                        ? `${formData.duration} days` 
+                        : "Not set"} 
+                    </p> 
+                  </div> 
+ 
+                  <div className="rounded-xl bg-black/15 p-3"> 
+                    <p className="text-[9px] uppercase tracking-wider text-blue-100/70"> 
+                      Travelers 
+                    </p> 
+ 
+                    <p className="mt-1 text-xs font-bold text-white"> 
+                      {formData.numTravelers} 
+                    </p> 
+                  </div> 
+ 
+                  <div className="rounded-xl bg-black/15 p-3"> 
+                    <p className="text-[9px] uppercase tracking-wider text-blue-100/70"> 
+                      Interests 
+                    </p> 
+ 
+                    <p className="mt-1 text-xs font-bold text-white"> 
+                      {formData.interests.length} 
+                    </p> 
+                  </div> 
+                </div> 
+ 
+                <button 
+                  type="submit" 
+                  className="group mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-xs font-black uppercase tracking-wider text-black transition-all hover:-translate-y-0.5 hover:bg-slate-100" 
+                > 
+                  Generate Itinerary 
+ 
+                  <ArrowRight 
+                    size={16} 
+                    className="transition-transform group-hover:translate-x-1" 
+                  /> 
+                </button> 
+              </div> 
+            </div> 
+          </div> 
+        </form> 
+ 
+        {/* FOOTER STATUS */} 
+ 
+        <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-[#080809] px-4 py-3"> 
+          <div className="flex items-center gap-2"> 
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" /> 
+ 
+            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-600"> 
+              AI Travel Planning System 
+            </span> 
+          </div> 
+ 
+          <span className="hidden text-[9px] uppercase tracking-wider text-slate-700 sm:block"> 
+            Ready for itinerary 
+          </span> 
+        </div> 
+      </div> 
+    </section> 
+  ) 
+} 
+ 
+export default Planner
