@@ -73,7 +73,7 @@ const generateTrip = async (req, res) => {
 
         // 4. Call Gemini API
         const response = await geminiai.models.generateContent({
-            model: 'gemini-3.6-flash',
+            model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
             contents: prompt,
             config: {
                 systemInstruction: 'You are an expert travel planner. Always return strict, valid JSON.',

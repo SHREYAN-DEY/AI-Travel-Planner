@@ -125,6 +125,7 @@ const getHistory = async (req, res) => {
     }
 };
 
+// Function for generating Ai insights of the budget
 const getAIInsights = async (req, res) => {
     try {
         const { budgetId } = req.body;
@@ -155,7 +156,7 @@ const getAIInsights = async (req, res) => {
 
         // Call Gemini API with strict structured output schema
         const response = await geminiai.models.generateContent({
-            model: 'gemini-3.6-flash',
+            model: process.env.GEMINI_MODEL || 'gemini-3.6-flash',
             contents: prompt,
             config: {
                 systemInstruction: 'You are a senior travel financial consultant. Analyze the budget, provide money saving tips, highlight hidden costs, and give typical local price examples in standard text format.',
