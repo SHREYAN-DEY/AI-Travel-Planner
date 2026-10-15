@@ -14,64 +14,84 @@ import budgetRoute from './routes/budget.js'
 
 const app = express();
 
-// Necessary for rate-limiting to track real IPs behind proxies
+// Trust reverse proxy (needed for accurate client IP tracking behind Nginx, Render, Railway, etc.)
 app.set("trust proxy", 1);
 
+// 1. Security Headers & CORS (Place first) CORS: Allowing your Vite frontend to communicate
 app.use(helmet());
-app.use(compression());
-app.use(cookieParser());
-
-// Parse JSON request bodies
-app.use(express.json());
-
-// Get api url on console
-if (process.env.NODE_ENV === "developement") {
-    app.use(morgan("dev"));
-}
-
-// CORS: Allowing your Vite frontend to communicate
 app.use(
     cors({
         origin: process.env.CLIENT_URL || "http://localhost:5173",
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
-    }),
+    })
 );
 
-// Middleware
+// 2. Logging & Compression
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
+app.use(compression());
+app.use(cookieParser());
+
+// 3. Body Parsing (Single declaration with limit)
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true, limit: "5mb" }));
 
-const generateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15mins
+// 4. General API Rate Limiter
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 mins
     max: 200,
     standardHeaders: true,
     legacyHeaders: false,
-    message: { error: "Too many request, please try again later" },
+    message: { error: "Too many requests, please try again later" },
 });
 
-// Auth Routes
-app.use("/api/auth", generateLimiter, authRoutes);
-// Trip Routes
-app.use("/api/trip", generateLimiter, tripRoutes);
-// budgetSchema
-app.use("/api/budget", generateLimiter, budgetRoute);
+// 5. Routes
+app.use("/api/auth", generalLimiter, authRoutes);  // Auth Routes
+app.use("/api/trip", generalLimiter, tripRoutes);  // Trip Routes
+app.use("/api/budget", generalLimiter, budgetRoute);   // budgetSchema
 
+// 6. 404 Route Catch-All
+app.use((req, res) => {
+    res.status(404).json({ error: "Route not found" });
+});
+
+// 7. Global Error Handler
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
-    console.error(`[${new Date().toLocaleString()}] Error:`, err.stack);
+    console.error(`[${new Date().toISOString()}] Error:`, err.stack || err.message);
 
-    // Gemini api key issue / billing error
-    if (err.status === 401 || (err.response.status === 401)) {
-        return res.status(500).json({ error: "AI Service configuration error. check API key....." });
+    // Identify true Gemini API Key / Upstream Quota / Auth issues
+    const isGeminiAuthError = 
+        err.name === 'GoogleGenAIError' ||
+        err.message?.includes('API_KEY_INVALID') ||
+        err.message?.includes('API key not valid') ||
+        (err.isGeminiError && (err.status === 401 || err.status === 403));
+
+    if (isGeminiAuthError) {
+        return res.status(500).json({
+            status: "Error",
+            message: "AI service configuration error. Please contact support or check server API keys.",
+        });
     }
 
+    // Standard user 401 (e.g., from authMiddleware) remains an authentic 401
+    if (statusCode === 401) {
+        return res.status(401).json({
+            status: "Fail",
+            message: err.message || "Unauthorized access. Invalid or expired token.",
+        });
+    }
+
+    // Fallback for all other errors
     res.status(statusCode).json({
         status: "Error",
-        message: statusCode === 500 & process.env.NODE_ENV === "production" 
-        ? "Internal Server Error" : err.message, 
-        ...(process.env.NODE_ENV === "developement" && { stack: err.stack }),
+        message: statusCode === 500 && process.env.NODE_ENV === "production" 
+            ? "Internal Server Error" 
+            : err.message,
+        ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
     });
 });
 
