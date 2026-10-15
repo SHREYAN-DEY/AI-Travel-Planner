@@ -3,6 +3,16 @@ import authController from '../controllers/authController.js';
 import authMiddleware from '../middleware/authMw.js';
 import { body, validationResult } from 'express-validator';
 
+const router = express.Router();
+
+// Strict limiter for login & registration to prevent brute-force attacks
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Max 10 attempts per IP per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' },
+});
 
 const validate = (req, res, next) => {
     const errors = validationResult(req);
@@ -23,12 +33,11 @@ const loginValidation = [
 ];
 
 
+// Sensitive endpoints protected by strict rate limit
+router.post('/register', authLimiter, registerValidation, validate, authController.register);
+router.post('/login', authLimiter, loginValidation, validate, authController.login);
 
-const router = express.Router();
-
-router.post('/register', registerValidation, validate, authController.register);
-router.post('/login', loginValidation, validate, authController.login);
-// User must be login(auto login using cookie)
+// Session verification & logout bypass the brute-force limiter
 router.get('/me', authMiddleware, authController.getMe);
 router.post('/logout', authController.logout);
 

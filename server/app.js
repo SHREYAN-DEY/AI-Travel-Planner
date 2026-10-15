@@ -49,7 +49,7 @@ const generalLimiter = rateLimit({
 });
 
 // 5. Routes
-app.use("/api/auth", generalLimiter, authRoutes);  // Auth Routes
+app.use("/api/auth", authRoutes);  // Auth Routes
 app.use("/api/trip", generalLimiter, tripRoutes);  // Trip Routes
 app.use("/api/budget", generalLimiter, budgetRoute);   // budgetSchema
 
