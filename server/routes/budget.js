@@ -50,6 +50,10 @@ const calValidation = [
         .withMessage("Accommodation type is required"),
 ];
 
+const AiValidation = [
+    body("budgetId").isMongoId().withMessage("A valid Budget ID is required"),
+];
+
 
 // Protecting Routes for all routes[Require JWT token]
 router.use(authMiddleware);
@@ -59,6 +63,6 @@ router.get('/history', budgetController.getHistory);
 // Calculate budget
 router.post('/calculate', calValidation, validate, budgetController.calculateBudget);
 // Get AI Insight
-router.post('/ai-insights', aiLimiter, budgetController.getAIInsights);
+router.post('/ai-insights', aiLimiter, AiValidation, budgetController.getAIInsights);
 
 export default router;
