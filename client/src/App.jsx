@@ -11,8 +11,8 @@ function App() {
       {/* <Home /> */}
       {/* <Register /> */}
       {/* <Login /> */}
-      {/* <Dashboard /> */}
-      <BudgetEstimator />
+       {/* <Dashboard /> */}
+       <BudgetEstimator /> 
     </div>
   );
 }

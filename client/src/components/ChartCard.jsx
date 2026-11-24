@@ -1,5 +1,5 @@
 import React from "react";
-import { Activity } from "lucide-react";
+import { Activity, BarChart3  } from "lucide-react";
 
 // Tactical Palette: Deep Blues and High-Contrast Greys
 const COLORS = [
@@ -45,7 +45,6 @@ function CustomTooltip({ active, payload }) {
       </div>
     );
   }
-
   return null;
 }
 
@@ -75,7 +74,6 @@ function ChartCard() {
         {/* Chart */}
 
       </div>
-
       <div className="grid grid-cols-2 gap-x-8 gap-y-6 mt-10 pt-10 border-t border-white/5">
         {/* Map Method */}
         <div className="flex items-center justify-between group/item">
@@ -94,5 +92,62 @@ function ChartCard() {
     </div>
   );
 }
+
+export function BudgetBarChart({ breakdown }) {
+  return (
+    <div className="bg-[#141417] border border-white/5 rounded-[2.5rem] p-10 shadow-2xl group hover:border-blue-500/30 transition-all duration-500">
+      <h3 className="text-[11px] font-black text-white uppercase tracking-[0.4em] mb-12 flex items-center gap-3">
+        <BarChart3 size={16} className="text-blue-500" /> Resource Depth
+      </h3>
+      <div className="h-80 w-full">
+        {/* Chart */}
+      </div>
+    </div>
+  );
+}
+
+export function BudgetOverUnder({ total, userBudget }) {
+  return (
+    <div className="relative overflow-hidden rounded-[2.5rem] border p-12 transition-all duration-500 bg-[#141417]">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
+        <Wallet
+          size={160}
+          strokeWidth={1}
+          className="text-white"
+        />
+      </div>
+      <div className="flex justify-between items-start mb-12 relative z-10">
+        <div>
+          <div
+            className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.3em] mb-6`}
+          >
+            {/* Conditional Rendering */}
+            <AlertTriangle size={16} />
+          </div>
+          <h2 className="text-7xl font-black text-white tracking-tighter leading-none uppercase italic">
+            Diff
+          </h2>
+          <p className="text-[10px] font-black text-gray-600 mt-4 uppercase tracking-[0.4em]">
+            {/* Conditional Rendering */}
+            Critical Difference
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-6 relative z-10">
+        <div className="flex justify-between items-end">
+          <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">
+            Asset Utilization Rate
+          </span>
+          <span className={`text-3xl font-black italic`}>Percentage</span>
+        </div>
+        <div className="h-6 bg-white/5 rounded-none border border-white/10 p-0.5">
+          <div className={`h-full transition-all duration-1000 ease-out`} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 export default ChartCard;

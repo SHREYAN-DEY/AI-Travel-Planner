@@ -10,6 +10,7 @@ import {
   Target,
   User,
   Zap,
+  TrendingUp,
 } from "lucide-react";
 
 import ControlField from "../components/ControlField";
@@ -17,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SummaryRow from "../components/SummaryRow";
 import HudStats from "../components/HudStats";
 import BudgetPieChart from "../components/ChartCard";
+import { BudgetBarChart } from "../components/ChartCard";
 
 function BudgetEstimator() {
   return (
@@ -154,21 +156,40 @@ function BudgetEstimator() {
                   value="15% Buffer"
                 />
               </div>
-
               {/* Analytics */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+                {/* Resource Allocation */}
                 <div className="bg-white/1 border border-white/5 rounded-[2.5rem] p-10 flex flex-col items-center">
                   <div className="w-full flex items-center gap-3 mb-8">
-                    <PenLine size={18} className="text-blue-500" />
+                    <PenLine
+                      size={18}
+                      className="text-blue-500"
+                    />
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-500">
                       Resource Allocation
                     </h3>
                   </div>
-                  <div>
+                  <div className="w-full py-4">
                     <BudgetPieChart />
                   </div>
                 </div>
+                {/* Profile Bar */}
+                <div className="bg-white/2 border border-white/5 rounded-[2.5rem] p-10">
+                  <div className="flex items-center gap-2 mb-8">
+                    <TrendingUp
+                      size={18}
+                      className="text-blue-500"
+                    />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                      Expenditure Velocity
+                    </h3>
+                  </div>
+                  <BudgetBarChart />
+                </div>
               </div>
+              {/* AI */}
+              
             </motion.div>
           </AnimatePresence>
         </main>
