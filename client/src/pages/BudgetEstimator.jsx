@@ -12,6 +12,7 @@ import {
   Globe,
   PenLine,
   ShieldCheck,
+  Sparkles,
   Target,
   User,
   Zap,
@@ -26,6 +27,7 @@ import ControlField from "../components/ControlField";
 import SummaryRow from "../components/SummaryRow";
 import HudStats from "../components/HudStats";
 import BudgetPieChart, { BudgetBarChart } from "../components/ChartCard";
+import AiInsightCard from "../components/AiInsightCard";
 
 function BudgetEstimator() {
   return (
@@ -91,7 +93,7 @@ function BudgetEstimator() {
                   <option value="Mid-range" className="bg-[#0a0a0c] text-white">STANDARD</option>
                   <option value="Luxury" className="bg-[#0a0a0c] text-white">PREMIUM</option>
                 </select>
-                <ChevronDown size={16} className="absolute right-5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"/>
+                <ChevronDown size={16} className="absolute right-5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none" />
               </div>
             </ControlField>
 
@@ -123,7 +125,7 @@ function BudgetEstimator() {
               className="h-56 border border-dashed border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 bg-white/1" >
               <Activity size={64} className="text-blue-500/10 animate-pulse" />
               <div className="text-center">
-                <p className="text-[10px] font-black uppercase tracking-wider text-gray-700">
+                <p className="text-[10px] font-black uppercase tracking-[0.05em] text-gray-700">
                   Awaiting Parameters
                 </p>
               </div>
@@ -147,7 +149,7 @@ function BudgetEstimator() {
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
 
                 {/* Resource Allocation Breakdown (Pie Chart Card) */}
-                <div className="bg-white/1 border border-white/5 rounded-[2.5rem] p-10 flex flex-col items-center">
+                <div className="bg-white/2 border border-white/5 rounded-[2.5rem] p-10 flex flex-col items-center">
                   <div className="w-full flex items-center gap-3 mb-8">
                     <PenLine size={18} className="text-blue-500" />
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-500">
@@ -172,6 +174,21 @@ function BudgetEstimator() {
               </div>
 
               {/* AI Optimization Recommendations Section (Placeholder) */}
+              <div className="flex flex-col min-h-[300px]">
+                {/* Conditional Rendering */}
+                <button className="flex-1 bg-blue-600/5 border-blue-500/20 hover:bg-blue-600/10 rounded-[2.5rem] p-12 flex flex-col items-center justify-center transition-all group">
+                  {/* Conditional Rendering */}
+                  <Sparkles size={40} className="text-blue-500 mb-6 group-hover:scale-110 transition-all" />
+                  <h4 className="tex-2xl font-bold text-white uppercase italic">Synthesize AI Inter</h4>
+                  <p className="text-[10px] font-black text-blue-400 uppercase tracking-[0.4em]">Execute Neural Link for Predictive Optimization"</p>
+                </button>
+                {/* Else */}
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                >
+                  <AiInsightCard />
+                </motion.div>
+
+              </div>
 
             </motion.div>
           </AnimatePresence>
