@@ -18,7 +18,7 @@ function AiInsightCard() {
                 <div className="flex items-center gap-5">
                     <div className="w-16 h-16 bg-gray-950 rounded-[1.5em] flex items-center justify-center text-white shadow-2xl relative overflow-hidden shrink-0">
                         <Sparkles size={24} className="relative z-10 text-blue-400" />
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute inset-0 bg-gradient-to-tr from-blue-600/40 to-transparent" />
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute inset-0 bg-linear-to-tr from-blue-600/40 to-transparent" />
                     </div>
                     <div>
                         <h3 className="text-3xl font-black text-gray-950 uppercase italic tracking-tighter leading-none">Neural Intelligence Briefing</h3>
@@ -36,7 +36,7 @@ function AiInsightCard() {
 
             {/* main Insight Block */}
             <div className="relative mb-12">
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full" />
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-linear-to-b from-blue-600 to-indigo-600 rounded-full" />
                 <p className="text-2xl text-gray-800 italic font-medium leading-relaxed pl-10 py-2"> Summary </p>
             </div>
             {/* Detailed Analysis Grid */}
@@ -52,7 +52,7 @@ function AiInsightCard() {
                     <ul className="space-y-5">
                         {/* Map Method */}
                         <motion.li whileHover={{ x: 5 }} className="text-sm font-bold text-gray-600 flex gap-5 items-start group/item">
-                            <span className="flex-shrink-0 w-7 h-7 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center text-[10px] font-black group-hover/item:bg-blue-600 group-hover/item:text-white group-hover item:shadow-lg transition-all">0</span>
+                            <span className="shrink-0 w-7 h-7 bg-gray-50 text-gray-400 rounded-xl flex items-center justify-center text-[10px] font-black group-hover/item:bg-blue-600 group-hover/item:text-white group-hover item:shadow-lg transition-all">0</span>
                             <span className="leading-snug pt-1">Tip</span>
                         </motion.li>
                     </ul>
