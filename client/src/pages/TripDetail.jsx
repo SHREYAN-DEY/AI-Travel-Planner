@@ -1,8 +1,12 @@
 import React from 'react';
-import { MapPin, Calendar, Users, Wallet, Share2 } from 'lucide-react';
+import { MapPin, Calendar, Users, Wallet, Share2, Sun, Moon, Coffee, Building2, TrainFront, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import HeaderBade from '../components/HeaderBade';
+import TimelineCard from '../components/TimelineCard';
+import AiInsightCard from "../components/AiInsightCard";
+import MapView from '../components/MapView';
+import LogisticRow from '../components/LogisticRow';
 
 export default function TripDetail() {
     return (
@@ -52,14 +56,62 @@ export default function TripDetail() {
                             </div>
 
                             <div className="ml-auto flex gap-3">
+                                {/* /I will update PDF Component */}
                                 <button className="p-4 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/20 transition-all">
-                                <Share2 size={20} />             
+                                    <Share2 size={20} />
                                 </button>
                             </div>
                         </div>
                     </motion.div>
                 </div>
             </section>
+            {/* Content Grid */}
+            <main className="container mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <div className="lg:col-span-8 space-y-12">
+                    <div className="flex items-center gap-2 overflow-x-auto pb-4 border-b border-white/5 scrollbar-hide">
+
+                        {/* map method */}
+                        <button className={`px-8 py-4 rounded-2xl text-xs font-black uppercase transition-all whitespace-nowrap`}>
+                            Day 1
+                        </button>
+                    </div>
+
+                    <div className="space-y-4">
+                        <TimelineCard time="09:00 AM" period="Morning" icon={Sun} data="" />
+                        <TimelineCard time="01:00 PM" period="Afternoon" icon={Coffee} data="" />
+                        <TimelineCard time="07:00 PM" period="Evening" icon={Moon} data="" />
+                    </div>
+                    <AiInsightCard />
+                </div>
+                {/* Right Side */}
+                <aside className="lg:col-span-4 space-y-8">
+                    <div className="sticky top-24 space-y-8">
+                        <div className="h-[400px] bg-black rounded-[2.5rem] overflow-hidden border-white/10 relative shadow-2xl">
+                            <MapView />
+                        </div>
+                        <div className="bg-[#0a0a0b] border border-white/5 rounded-[2.5rem] p-8 space-y-8 shadow-2xl relative overflow-hidden">
+                            {/* Background Glow */}
+                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 blur-[100px]" />
+                            <div>
+                                <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em] mb-6"> Operations Hub
+                                </h3>
+                                <div className="space-y-6">
+                                    <LogisticRow icon={Building2} label="Primary Residence" value="Dummy" />
+                                    <LogisticRow icon={TrainFront} label="Transit Network" value="Dummy" />
+                                </div>
+                            </div>
+
+                            <div className="p-8 border-t border-white/5 space-y-6">
+                                <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">
+                                    Essential Intel
+                                </h3>
+                                <LogisticRow icon={ShieldCheck} label="Safety Protocol" value="Region Verified - Safe" />
+                                <LogisticRow icon={ShieldCheck} label="Safety Protocol" value="Region Verified - Safe" />
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </main>
         </div>
     );
 }
