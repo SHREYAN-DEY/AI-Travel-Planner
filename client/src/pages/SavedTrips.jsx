@@ -1,5 +1,8 @@
+// Core React & Animation Imports
 import React from 'react';
 import { AnimatePresence, motion } from "framer-motion";
+
+// UI Icons from Lucide React
 import {
     Calendar,
     Zap,
@@ -10,35 +13,42 @@ import {
     Layers
 } from 'lucide-react';
 
+// Navigation & Custom UI Components
 import Navbar from '../components/Navbar';
 import { SmartImage } from '../components/SmartImage';
 import Matric from '../components/Matric';
 
 export default function SavedTrips() {
     return (
+        // Main Viewport Wrapper
         <div className="min-h-screen bg-[#070708] text-[#fafafa] font-sans selection:bg-blue-500/30 overflow-hidden">
 
-            {/* Navigation Bar */}
+            {/* Global Navigation Bar */}
             <Navbar />
 
+            {/* Split-Screen Content Area */}
             <main className="flex h-screen pt-20">
-                {/* Left Sidebar */}
+
+                {/* Left Sidebar: Selected Trip Preview & Mission Launchpad */}
                 <section className="hidden lg:flex flex-[1.4] relative border-r border-white/5 overflow-hidden bg-[#0a0a0b]">
                     <AnimatePresence mode="wait">
-                        {/* Conditional rendering */}
+                        {/* Conditional rendering: Active Trip Preview */}
                         <motion.div
                             key="left-sidebar"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="w-full h-fullflex flex-col relative">
+                            className="w-full h-full flex flex-col relative">
 
+                            {/* Background Destination Image & Gradient Vignette */}
                             <div className="absolute inset-0 z-0">
                                 <SmartImage className="w-full h-full opacity-30 grayscale-[0.2]" />
                                 <div className="absolute inset-0 bg-linear-to-r from-[#070708] via-transparent to-transparent"></div>
                             </div>
 
+                            {/* Foreground Trip Telemetry & Actions */}
                             <div className="relative z-10 p-16 flex flex-col h-full">
+                                {/* Destination Title Header */}
                                 <header>
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-px bg-blue-500" />
@@ -51,46 +61,51 @@ export default function SavedTrips() {
                                     </h2>
                                 </header>
 
+                                {/* Trip Key Metrics Row */}
                                 <div className="mt-auto grid grid-cols-3 gap-8 border-t border-white/10 pt-12 pb-8">
                                     <Matric label="Duration" value="" icon={Calendar} />
                                     <Matric label="Budget" value="" icon={Zap} />
                                     <Matric label="Style" value="" icon={Layers} />
                                 </div>
 
+                                {/* Primary Launch & Delete Action Controls */}
                                 <div className="flex gap-4">
-                                    <a href="#" className="flex-1 flex items-center justify-center gap-4 py-6 bg-blue-600 rounded-3xl font-black text-[11px] uppercase tracking-[#0.2em] hover:bg-blue-500 transition-all">
+                                    <a href="#" className="flex-1 flex items-center justify-center gap-4 py-6 bg-blue-600 rounded-3xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-blue-500 transition-all">
                                         Initialize Mission
                                     </a>
-                                    <button className="w-20 flex items-center justify-center eounded-3xl bg-white/5 border border-white/10 text-gray-500 hover:text-red-500 transition-all">
+                                    <button className="w-20 flex items-center justify-center rounded-3xl bg-white/5 border border-white/10 text-gray-500 hover:text-red-500 transition-all">
                                         {/* Conditional Rendering */}
                                         <Trash2 />
                                     </button>
                                 </div>
                             </div>
                         </motion.div>
-                        {/* else */}
-                        <div className="m-auto opacity-20 text-center uppercase tracking-widest text-xs font-black">
+
+                        {/* else: Empty Preview State */}
+                        <div key="no-signal" className="m-auto opacity-20 text-center uppercase tracking-widest text-xs font-black">
                             <Monitor size={48} className="mx-auto mb-4" /> No Signal
                         </div>
                     </AnimatePresence>
                 </section>
 
-                {/* Right Sidebar */}
-                <section className="flex-1 overflow-y-hidden bg-[#070708] p-8 lg:p-10 custom-scrollbar">
+                {/* Right Sidebar: Saved Trip Archives List */}
+                <section className="flex-1 overflow-y-auto bg-[#070708] p-8 lg:p-10 custom-scrollbar">
+                    {/* Archives Header & Create New Button */}
                     <div className="flex justify-between items-end mb-12">
                         <h1 className="text-3xl font-black tracking-tighter uppercase italic text-white">
                             Archives
                         </h1>
-                        <a href="#" className="w-12 h-12 bg-white/5 border-white/10 rounded-2xl flex items-center justify-center text-blue-500 hover:bg-blue-600 hover:text-white transition-all">
+                        <a href="#" className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-blue-500 hover:bg-blue-600 hover:text-white transition-all">
                             <Plus size={24} />
                         </a>
                     </div>
 
+                    {/* Saved Trips Card List */}
                     <div className="grid gap-4">
-                        {/* Conditional Rendering */}
-                        <div className="h-24 bg-white/5 rounded-[2rem] animate-pulse" />
+                        {/* Conditional Rendering: Loading Skeleton */}
+                        <div className="h-24 bg-white/5 rounded-4xl animate-pulse" />
 
-                        {/* else */}
+                        {/* else: Saved Trip Item Card */}
                         <motion.div className={`group relative p-4 rounded-[2.5rem] border transition-all duration-500 cursor-pointer`}>
 
                             <div className="flex items-center gap-5 relative z-10">
@@ -113,4 +128,3 @@ export default function SavedTrips() {
         </div>
     );
 }
-
