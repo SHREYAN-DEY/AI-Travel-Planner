@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function HeaderBade({icon: Icon, label, value}) {
+export default function HeaderBadge({icon: Icon, label, value}) {
   return (
     <div className="bg-black/40 backdrop-blur-md border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-3 hover:bg-white/5 transition-all">
         <Icon size={16} className="text-blue-500" />

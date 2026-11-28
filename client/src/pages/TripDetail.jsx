@@ -13,7 +13,7 @@ import {
     ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
-import HeaderBade from '../components/HeaderBade';
+import HeaderBadge from '../components/HeaderBadge';
 import TimelineCard from '../components/TimelineCard';
 import AiInsightCard from "../components/AiInsightCard";
 import MapView from '../components/MapView';
@@ -47,8 +47,8 @@ export default function TripDetail() {
                         <h1 className="text-7xl md:text-9xl font-black uppercase tracking-tighter italic leading-[0.85] mb-10"> City Name <span className="text-blue-600">.</span>
                         </h1>
                         <div className="flex flex-wrap items-center gap-6">
-                            <HeaderBade icon={Calendar} label="Duration" value={`Days`} />
-                            <HeaderBade icon={Users} label="Group" value={`Number of Travels`} />
+                            <HeaderBadge icon={Calendar} label="Duration" value={`Days`} />
+                            <HeaderBadge icon={Users} label="Group" value={`Number of Travels`} />
                             <div className="bg-blue-600/10 backdrop-blur-xl border border-blue-500/30 px-6 py-3 rounded-2xl flex items-center gap-4 group-hover:bg-blue-600/20 transition-all shadow-2xl">
                                 <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
                                     <Wallet size={18} />
