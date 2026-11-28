@@ -17,8 +17,8 @@ function App() {
       {/* <Dashboard /> */}
       {/* <BudgetEstimator /> */}
       {/* <SavedTrips /> */}
-      {/* <TripDetail /> */}
-      <TripPlanner />
+      <TripDetail />
+      {/* <TripPlanner /> */}
     </div>
   );
 }
